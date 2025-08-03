@@ -1,0 +1,52 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero-section {
+    background: linear-gradient(to right, #3b0a67, #150933);
+    padding: 80px 0;
+}
+
+.hero-text {
+    background-color: #8653ff;
+    color: white;
+}
+
+.bg-purple {
+    background-color: #8653ff !important;
+}
+
+.popular-section {
+    background-color: #000000;
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.newsletter-section {
+    background-color:#000;
+    background-size: cover;
+    padding: 60px 0;
+}
+
+.newsletter-section .form-control {
+    border-radius: 20px;
+    padding: 12px 20px;
+}
+
+.footer-section {
+    background-color: #000;
+    color: #fff;
+    font-size: 14px;
+}
+
+.footer-section h6 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-section img {
+    vertical-align: middle;
+}
