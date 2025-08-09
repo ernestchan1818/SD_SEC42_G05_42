@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -35,34 +34,43 @@ header nav a:hover {
     color: #f39c12;
 }
 
-.hero {
-    position: relative;
+.signin-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
     text-align: center;
 }
 
-.bg-image {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    opacity: 0.8;
-}
-
-.hero-text {
-    background-color: rgb(182, 177, 177);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.hero-text h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-.hero-text p {
-    font-size: 1.2em;
+.signin-container h2 {
     margin-bottom: 20px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 5px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #f39c12;
 }
 
 .btn {
@@ -70,33 +78,28 @@ header nav a:hover {
     background: #f39c12;
     color: white;
     text-decoration: none;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
     transition: background 0.3s ease;
+    width: 100%;
 }
 
 .btn:hover {
     background: #e67e22;
 }
 
-.payment {
-    text-align: center;
-    padding: 40px 20px;
-    background: #1a1a1a;
+.signup-text {
+    margin-top: 15px;
 }
 
-.payment h2 {
-    margin-bottom: 20px;
+.signup-text a {
+    color: #f39c12;
+    text-decoration: none;
 }
 
-.payment-logos img {
-    width: 80px;
-    margin: 0 10px;
-    filter: brightness(0.9);
-    transition: transform 0.3s ease;
-}
-
-.payment-logos img:hover {
-    transform: scale(1.1);
+.signup-text a:hover {
+    text-decoration: underline;
 }
 
 footer {
@@ -104,4 +107,7 @@ footer {
     padding: 20px;
     background: #222;
     font-size: 0.9em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
