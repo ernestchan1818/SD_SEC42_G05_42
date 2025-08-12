@@ -7,23 +7,42 @@
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
+
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
             <a href="home.html">Home</a>
-            <a href="#">Top-Ups</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
-            <a href="signin.html">Sign Up</a>
+            <a href="#topup">Top-Up Games</a>
+            <a href="signin.html">Sign In</a>
             <a href="register.html">Register</a>
         </nav>
     </header>
 
-    <section class="hero">
+    <section id="home" class="hero">
         <img src="../image/homebg.webp" alt="Game Background" class="bg-image">
         <div class="hero-text">
             <h1>Welcome to DJS Game</h1>
             <p>Your ultimate gaming experience awaits!</p>
+        </div>
+    </section>
+
+    <section id="topup" class="topup-games">
+        <h2>🔥 Popular Top-Up Games</h2>
+        <div class="game-list">
+            <div class="game-card">
+                <img src="../image/genshin.webp" alt="Genshin Impact">
+                <h3>Genshin Impact</h3>
+            </div>
+            <div class="game-card">
+                <img src="../image/hsr.png" alt="Honkai Star Rail">
+                <h3>Honkai: Star Rail</h3>
+            </div>
+            <div class="game-card">
+                <img src="../image/wuwa.png" alt="Wuthering Waves">
+                <h3>Wuthering Waves</h3>
+            </div>
         </div>
     </section>
 
@@ -39,5 +58,16 @@
     <footer>
         <p>&copy; 2025 DJS Game. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute("href"))
+                    .scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    </script>
+
 </body>
 </html>
