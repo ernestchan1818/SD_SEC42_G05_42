@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Email - DJS Game</title>
+  <link rel="stylesheet" href="../css/verify.css"/>
+</head>
+<body>
+  <header>
+    <div class="logo">DJS Game</div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </header>
+
+  <section class="verify-wrapper">
+    <div class="card">
+      <h1>Verify Your Email</h1>
+      <p class="sub">
+        We’ve sent a 6-digit code to your email. Enter it below to verify your account.
+      </p>
+
+      <form action="#" method="post" class="verify-form">
+        <label for="code">Verification Code</label>
+        <div class="code-grid">
+          <input type="text" inputmode="numeric" maxlength="6" required/>
+
+        </div>
+
+        <button type="submit" class="btn">Verify Email</button>
+      </form>
+
+      <div class="meta">
+        <p>Didn’t get the code? <a href="#" class="link">Resend code</a></p>
+        <p>Wrong email? <a href="register.html" class="link">Change it</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 DJS Game. All rights reserved.</p>
+  </footer>
+
+  <!-- Optional: auto-focus next box when typing (no external files needed) -->
+  <script>
+    const inputs = document.querySelectorAll('.code-grid input');
+    inputs.forEach((input, idx) => {
+      input.addEventListener('input', () => {
+        if (input.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && idx > 0) inputs[idx - 1].focus();
+      });
+    });
+  </script>
+</body>
+</html>

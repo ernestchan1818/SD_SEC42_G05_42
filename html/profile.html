@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile - DJS Game</title>
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DJS Game</div>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+            <a href="logout.html">Logout</a>
+        </nav>
+    </header>
+
+    <section class="profile">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="../image/default-avatar.png" alt="Profile Picture" class="profile-pic">
+                <h2>John Doe</h2>
+                <p>john.doe@email.com</p>
+                <p>+6012-345 6789</p>
+                <button class="btn">Edit Profile</button>
+            </div>
+
+            <div class="profile-body">
+                <h3>Top-Up History</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Game</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12 Aug 2025</td>
+                            <td>Mobile Legends</td>
+                            <td>500 Diamonds</td>
+                            <td class="status success">Completed</td>
+                        </tr>
+                        <tr>
+                            <td>5 Aug 2025</td>
+                            <td>Free Fire</td>
+                            <td>200 Diamonds</td>
+                            <td class="status pending">Pending</td>
+                        </tr>
+                        <tr>
+                            <td>25 Jul 2025</td>
+                            <td>Genshin Impact</td>
+                            <td>980 Crystals</td>
+                            <td class="status failed">Failed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 DJS Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>
