@@ -3,7 +3,7 @@ session_start();
 include("config.php"); // 数据库连接
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
+    $email = trim($_POST["email"]);
     $password = $_POST["password"];
 
     $sql = "SELECT * FROM users WHERE email=?";
@@ -16,13 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = $result->fetch_assoc();
 
         if (password_verify($password, $row['password'])) {
-            // 登录成功，保存用户名到 session
+            // 登录成功，保存用户ID和用户名到 session
+            $_SESSION['user_id'] = $row['id'];       // ✅ 加上用户ID
             $_SESSION['username'] = $row['username'];
 
-            // 用 JavaScript 跳转并弹出欢迎信息
+            // 登录成功提示并跳转
             echo "<script>
                     alert('Welcome, " . $row['username'] . "!');
-                    window.location.href = 'home.html';
+                    window.location.href = 'home.php'; // 建议用PHP页面而不是html
                   </script>";
         } else {
             echo "<script>alert('Wrong password'); window.location.href='signin.php';</script>";
@@ -32,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
