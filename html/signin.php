@@ -25,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Redirect based on code
             if ($code === "djsstaff") {
-                header("Location: homestaff.html");
+                header("Location: homestaff.php");
                 exit;
             } elseif ($code === "djsadmin") {
-                header("Location: homeadmin.html");
+                header("Location: homeadmin.php");
                 exit;
             } else {
-                header("Location: home.html");
+                header("Location: homecustomer.php");
                 exit;
             }
         } else {
@@ -92,4 +92,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
 </body>
 </html>
-

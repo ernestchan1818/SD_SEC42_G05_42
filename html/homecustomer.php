@@ -15,8 +15,7 @@
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
             <a href="#topup">Top-Up Games</a>
-            <a href="signin.php">Sign In</a>
-            <a href="register.php">Register</a>
+            <a href="signout.php">Sign Out</a>
         </nav>
     </header>
 
