@@ -10,8 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
-// 取用户资料
-$sql = "SELECT id, username, email, is_verified, created_at, password FROM users WHERE id = ?";
+// 取用户资料（加 avatar 字段）
+$sql = "SELECT id, username, email, is_verified, created_at, password, avatar FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die("Database error: " . $conn->error);
@@ -68,11 +68,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
         $update->bind_param("si", $new_username, $userId);
         if ($update->execute()) {
             $username_message = "✅ Username updated successfully!";
-            $user['username'] = $new_username; // ⚡ 更新 session 里的显示
+            $user['username'] = $new_username;
             $_SESSION['username'] = $new_username;
         } else {
             $username_message = "❌ Error updating username.";
         }
+    }
+}
+
+// ⚡ 上传头像
+$avatar_message = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
+    if (!empty($_FILES["avatar"]["name"])) {
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        $fileName = uniqid() . "_" . basename($_FILES["avatar"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+
+        $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+        $allowedTypes = ["jpg", "jpeg", "png", "gif"];
+
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $targetFilePath)) {
+                $update = $conn->prepare("UPDATE users SET avatar=? WHERE id=?");
+                $update->bind_param("si", $targetFilePath, $userId);
+                if ($update->execute()) {
+                    $avatar_message = "✅ Avatar uploaded successfully!";
+                    $user['avatar'] = $targetFilePath; // 更新本地显示
+                } else {
+                    $avatar_message = "❌ Database update failed.";
+                }
+            } else {
+                $avatar_message = "❌ Failed to upload file.";
+            }
+        } else {
+            $avatar_message = "❌ Only JPG, JPEG, PNG, GIF allowed.";
+        }
+    } else {
+        $avatar_message = "❌ Please select a file.";
     }
 }
 ?>
@@ -81,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
 <head>
     <meta charset="UTF-8">
     <title>Your Profile - DJS Game</title>
-    <link rel="stylesheet" href="../css/profile.css">
     <style>
         body{font-family:system-ui,Arial,sans-serif;background:#0b0f17;color:#e8ecf1;margin:0}
         header,footer{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#111827}
@@ -94,13 +129,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
         .badge{padding:2px 8px;border-radius:999px;font-size:12px}
         .ok{background:#10b98133;color:#10b981}
         .no{background:#ef444433;color:#ef4444}
-        .btn{display:inline-block;margin-top:16px;padding:10px 16px;border-radius:10px;background:#2563eb;color:#fff;text-decoration:none;border:none;cursor:pointer}
+        .btn{display:inline-block;margin-top:10px;padding:10px 16px;border-radius:10px;background:#2563eb;color:#fff;text-decoration:none;border:none;cursor:pointer}
         .btn.out{background:#ef4444}
-        form{margin-top:30px}
+        form{margin-top:20px}
         input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#fff}
         .msg{margin-top:10px;padding:10px;border-radius:8px}
         .success{background:#10b98133;color:#10b981}
         .error{background:#ef444433;color:#ef4444}
+        img.avatar{border-radius:50%;width:120px;height:120px;object-fit:cover}
     </style>
 </head>
 <body>
@@ -114,35 +150,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
 </header>
 
 <div class="wrap">
-    <h2 style="margin-top:0;">Your Profile</h2>
+    <h2>Your Profile</h2>
 
-    <div class="row">
-        <div class="label">Username</div>
-        <div class="value"><?php echo htmlspecialchars($user['username']); ?></div>
+    <!-- 显示头像 -->
+    <div style="text-align:center;margin-bottom:20px;">
+        <?php if (!empty($user['avatar'])): ?>
+            <img src="<?php echo htmlspecialchars($user['avatar']); ?>" class="avatar" alt="Avatar">
+        <?php else: ?>
+            <img src="default.png" class="avatar" alt="Default Avatar">
+        <?php endif; ?>
     </div>
-    <div class="row">
-        <div class="label">Email</div>
-        <div class="value"><?php echo htmlspecialchars($user['email']); ?></div>
-    </div>
-    <div class="row">
-        <div class="label">Verified</div>
-        <div class="value">
-            <?php if (!empty($user['is_verified'])): ?>
-                <span class="badge ok">Verified</span>
-            <?php else: ?>
-                <span class="badge no">Not verified</span>
-            <?php endif; ?>
+
+    <!-- 上传头像 -->
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*" required>
+        <button type="submit" name="upload_avatar" class="btn">Upload Avatar</button>
+    </form>
+    <?php if ($avatar_message): ?>
+        <div class="msg <?php echo (str_starts_with($avatar_message, '✅') ? 'success' : 'error'); ?>">
+            <?php echo $avatar_message; ?>
         </div>
-    </div>
-    <div class="row">
-        <div class="label">Joined</div>
-        <div class="value"><?php echo htmlspecialchars($user['created_at']); ?></div>
-    </div>
+    <?php endif; ?>
 
-    <a class="btn out" href="logout.php">Logout</a>
+    <!-- 用户资料 -->
+    <div class="row"><div class="label">Username</div><div class="value"><?php echo htmlspecialchars($user['username']); ?></div></div>
+    <div class="row"><div class="label">Email</div><div class="value"><?php echo htmlspecialchars($user['email']); ?></div></div>
+    <div class="row"><div class="label">Verified</div><div class="value"><?php echo !empty($user['is_verified']) ? '<span class="badge ok">Verified</span>' : '<span class="badge no">Not verified</span>'; ?></div></div>
+    <div class="row"><div class="label">Joined</div><div class="value"><?php echo htmlspecialchars($user['created_at']); ?></div></div>
 
-    <!-- 🔹 修改用户名表单 -->
-    <h3 style="margin-top:40px;">Edit Username</h3>
+    <!-- 修改用户名 -->
+    <h3>Change Username</h3>
     <form method="POST">
         <input type="text" name="new_username" placeholder="New Username" required>
         <button type="submit" name="change_username" class="btn">Update Username</button>
@@ -153,8 +190,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
         </div>
     <?php endif; ?>
 
-    <!-- 🔹 修改密码表单 -->
-    <h3 style="margin-top:40px;">Change Password</h3>
+    <!-- 修改密码 -->
+    <h3>Change Password</h3>
     <form method="POST">
         <input type="password" name="old_password" placeholder="Old Password" required>
         <input type="password" name="new_password" placeholder="New Password" required>
@@ -166,6 +203,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_username"])) {
             <?php echo $pwd_message; ?>
         </div>
     <?php endif; ?>
+
+    <a class="btn out" href="logout.php">Logout</a>
 </div>
 
 <footer>
