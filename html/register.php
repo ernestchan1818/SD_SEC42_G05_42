@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <nav>
             <a href="home.html">Home</a>
             <a href="register.php" class="active">Register</a>
-            <a href="signin.html">Login</a>
+            <a href="signin.php">Login</a>
         </nav>
     </header>
 
