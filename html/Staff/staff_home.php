@@ -15,7 +15,9 @@ session_start();
         <h2>DJS Game Top-up Platform</h2>
         <div class="nav-right">
             <span>Welcome, <?php echo htmlspecialchars($username); ?></span>
+
             <a href="logoutS.php" class="btn-logout">Logout</a>
+
         </div>
     </div>
 
@@ -27,6 +29,7 @@ session_start();
                 <h3>View Customer Contact</h3>
                 <p>Check and reply to messages from customers.</p>
                 <a href="contactus.php" class="btn">Go</a>
+
             </div>
 
             <div class="card">

@@ -67,7 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif ($_SESSION['otp'] == $enteredOtp) {
             $email = $_SESSION['reset_email'];
             $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+
             $sql = "UPDATE staff_admin SET password='$hashedPassword' WHERE email='$email'";
+
+
 
             if ($conn->query($sql) === TRUE) {
                 $message = "Password reset successful!";
