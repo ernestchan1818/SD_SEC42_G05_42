@@ -95,12 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <header>
         <div class="logo">DJS Game</div>
-        <nav>
-            <a href="home.html">Home</a>
-            <a href="about.html">About Us</a>
-            <a href="contact.html">Contact</a>
-            <a href="register.html">Register</a>
-        </nav>
+
     </header>
 
     <section class="forgot-password">
