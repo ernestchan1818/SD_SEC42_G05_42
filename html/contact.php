@@ -31,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="about.html">About Us</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="contact.php">Contact Us</a>
             <a href="register.php">Register</a>
-            <a href="signin.html">Sign In</a>
+            <a href="signin.php">Sign In</a>
         </nav>
     </header>
 
