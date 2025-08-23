@@ -14,8 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $confirm  = $_POST['confirm-password'];
 
+    // ✅ 密码强度正则
+    $passwordPattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/";
+
     if ($password !== $confirm) {
-        $message = "Passwords do not match!";
+        $message = "❌ Passwords do not match!";
+        echo "<script>alert('$message');</script>";
+    } elseif (!preg_match($passwordPattern, $password)) {
+        $message = "❌ Password must be at least 8 characters, include uppercase, lowercase, number, and special character (!@#￥ etc).";
         echo "<script>alert('$message');</script>";
     } else {
         $check = $conn->prepare("SELECT * FROM users WHERE email=?");
@@ -24,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $check->get_result();
 
         if ($result->num_rows > 0) {
-            $message = "Email already registered!";
+            $message = "❌ Email already registered!";
             echo "<script>alert('$message');</script>";
         } else {
             $otp = substr(str_shuffle("0123456789"), 0, 6);
@@ -34,14 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ssss", $username, $email, $hash, $otp);
 
             if ($stmt->execute()) {
-                // PHPMailer
                 $mail = new PHPMailer(true);
                 try {
                     $mail->isSMTP();
                     $mail->Host       = 'smtp.gmail.com';
                     $mail->SMTPAuth   = true;
-                    $mail->Username   = 'jesvin20050501@gmail.com'; // 你的Gmail
-                    $mail->Password   = 'fencfureagihgesd';        // 你的App password
+                    $mail->Username   = 'jesvin20050501@gmail.com';
+                    $mail->Password   = 'fencfureagihgesd';
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port       = 587;
 
@@ -52,25 +57,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mail->send();
 
-                    // JS 跳转
                     echo "<script>
-                            alert('Registration successful! OTP has been sent to your email.');
+                            alert('✅ Registration successful! OTP has been sent to your email.');
                             window.location.href='verify.php?email=".urlencode($email)."';
                           </script>";
                     exit();
-
                 } catch (Exception $e) {
                     $message = "Mailer Error: " . $mail->ErrorInfo;
                     echo "<script>alert('$message');</script>";
                 }
             } else {
-                $message = "Database insert failed!";
+                $message = "❌ Database insert failed!";
                 echo "<script>alert('$message');</script>";
             }
         }
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -105,8 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter password" required>
+    <label for="password">Set Password</label>
+    <input type="password" id="password" name="password" placeholder="Enter password" required>
+    <!-- 密码强度提示 -->
+    <div id="strengthMessage"></div>
             </div>
 
             <div class="form-group">
@@ -122,5 +128,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <footer>
         &copy; 2025 DJS Game. All rights reserved.
     </footer>
+     <script>
+document.getElementById("password").addEventListener("input", function() {
+    let password = this.value;
+    let strengthMessage = document.getElementById("strengthMessage");
+
+    let strength = 0;
+
+    if (password.length >= 6) strength++;
+    if (password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+    if (password.length === 0) {
+        strengthMessage.textContent = "";
+    } else if (strength <= 1) {
+        strengthMessage.textContent = "Weak password";
+        strengthMessage.className = "strength-weak";
+    } else if (strength === 2 || strength === 3) {
+        strengthMessage.textContent = "Medium password";
+        strengthMessage.className = "strength-medium";
+    } else {
+        strengthMessage.textContent = "Strong password";
+        strengthMessage.className = "strength-strong";
+    }
+});
+</script>
+
 </body>
 </html>

@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password - DJS Game</title>
-    <link rel="stylesheet" href="../css/forgetpassword.css">
+    <link rel="stylesheet" href="../css/forgotpassword.css">
 </head>
 <body>
     <header>
@@ -99,12 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="home.html">Home</a>
             <a href="about.html">About Us</a>
             <a href="contact.html">Contact</a>
-            <a href="register.html">Register</a>
+            <a href="registerS.php">Register</a>
         </nav>
     </header>
 
-    <section class="forgot-password">
-        <div class="container">
+    <section class="forgot-password-section">
+        <div class="forgot-password-container">
             <h1>Forgot Your Password?</h1>
             <p style="color:red;"><?php echo $message; ?></p>
 
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
 
             <p class="back-link">
-                Remembered your password? <a href="login.html">Back to Login</a>
+                Remembered your password? <a href="signin.php">Back to Login</a>
             </p>
         </div>
     </section>

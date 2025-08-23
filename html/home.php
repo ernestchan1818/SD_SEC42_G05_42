@@ -1,7 +1,29 @@
-<?
+<?php
 session_start();
-?>
+require "config.php"; // 确保有数据库连接
 
+// 默认访客
+$username = "Guest";
+$avatar = "";
+
+// 如果用户已登录
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+
+    // 查询用户名和头像
+    $sql = "SELECT username, avatar FROM users WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $username = $user['username'];
+        $avatar = $user['avatar']; // 可以是上传过的路径
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,16 +31,36 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DJS Game</title>
     <link rel="stylesheet" href="../css/home.css">
+     <style>
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+        }
+        .nav-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        </style>
 </head>
 <body>
 
     <header>
         <div class="logo">🎮 DJS Game</div>
+         <div class="nav-user">
+                <?php if (!empty($avatar)): ?>
+                    <img src="<?php echo htmlspecialchars($avatar); ?>" alt="Avatar">
+                <?php endif; ?>
+                <span>Welcome！！<?php echo htmlspecialchars($username); ?></span>
+            </div>
         <nav>
             <a href="profile.php">Profile</a>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="contact.php">Contact</a>
             <a href="#topup">Top-Up Games</a>
             <a href="signin.php">Sign In</a>
             <a href="register.php">Register</a>
