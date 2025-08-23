@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($user['role'] === 'admin') {
                 header("Location: admin_home.php");
+
             } else {
                 header("Location: staff_home.php");
             }
@@ -53,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('$message');</script>";
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

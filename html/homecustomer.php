@@ -11,9 +11,9 @@
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
-            <a href="home.html">Home</a>
+            <a href="homecustomer.php">Home</a>
             <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="contact.php">Contact</a>
             <a href="#topup">Top-Up Games</a>
             <a href="signout.php">Sign Out</a>
         </nav>
