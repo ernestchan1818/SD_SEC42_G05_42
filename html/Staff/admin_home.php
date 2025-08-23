@@ -25,7 +25,6 @@ if ($staffId) {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -56,12 +55,11 @@ if ($staffId) {
 
             <span>Welcome, <?php echo htmlspecialchars($username); ?> </span>
             <a href="logoutS.php" class="btn-logout">Logout</a>
+        </div>
     </div>
 
     <div class="container">
-
-        <h1>Staff Dashboard</h1>
-
+        <h1>Admin Dashboard</h1>
         <div class="cards">
             <div class="card">
                 <img src="../Staff/image/contact.png" alt="Contact">
@@ -83,6 +81,8 @@ if ($staffId) {
                 <p>Manage your account and update your profile details.</p>
                 <a href="profileS.php" class="btn">Go</a>
             </div>
+
+        
         </div>
     </div>
 </body>

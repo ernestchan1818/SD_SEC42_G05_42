@@ -145,7 +145,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
     <nav>
         <a href="staff_home.php">Home</a>
         <a href="profileS.php">Profile</a>
-        <a href="logout.php">Logout</a>
+        <a href="logoutS.php">Logout</a>
+
     </nav>
 </header>
 

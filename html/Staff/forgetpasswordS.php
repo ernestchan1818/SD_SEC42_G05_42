@@ -71,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "UPDATE staff_admin SET password='$hashedPassword' WHERE email='$email'";
 
 
-
             if ($conn->query($sql) === TRUE) {
                 $message = "Password reset successful!";
                 unset($_SESSION['otp']);

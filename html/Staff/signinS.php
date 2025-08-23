@@ -35,9 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['staffid'] = $user['staffid'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
+            $_SESSION['email'] = $user['email'];
+
 
             if ($user['role'] === 'admin') {
-                header("Location: staff_home.php");
+                header("Location: admin_home.php");
+
             } else {
                 header("Location: staff_home.php");
             }
@@ -51,7 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('$message');</script>";
     }
 }
-?><!DOCTYPE html>
+
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
