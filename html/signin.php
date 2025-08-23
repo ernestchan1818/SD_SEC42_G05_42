@@ -40,6 +40,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>  body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(
+          rgba(0, 0, 0, 0.5),
+          rgba(0, 0, 0, 0.5)
+      ), url("../image/bgsi.webp") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }</style>
     <title>Sign In</title>
     <link rel="stylesheet" href="../css/signin.css">
 </head>
@@ -47,9 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
-            <a href="home.html">Home</a>
             <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="contact.php">Contact</a>
         </nav>
     </header>
 
@@ -65,16 +75,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
             <button type="submit" class="btn">Sign In</button>
-            <a href="forgetpassword.php">Forget Password?</a>
-        </form>
-        <p class="signup-text">Don't have an account? <a href="register.php">Register here</a></p>
             <div style="margin-top: 15px; text-align: center;">
-            <a href="home.html" class="btn" style="display:inline-block; padding:10px 20px; background:#444; color:#fff; border-radius:5px; text-decoration:none;">
+            <a href="home.php" class="btn" style="display:inline-block; padding:10px 20px; background:#444; color:#fff; border-radius:5px; text-decoration:none;">
                 Sign In as Guest
             </a>
         </div>
+            <a href="forgetpassword.php">Forget Password?</a>
+         <!-- 这里新增 -->
+        <p style="margin-top: 15px; text-align: center;">
+            Don’t have an account? 
+            <a href="register.php" style="color: #4CAF50; text-decoration: none;">Go Register</a>
+        </p>
+    </form>
         
-        <img src="../image/ciallo.jpg" alt="Game Background" class="bg-image">
     </section>
     
     <footer>

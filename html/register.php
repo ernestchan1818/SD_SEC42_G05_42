@@ -83,15 +83,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <style>  body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(
+          rgba(0, 0, 0, 0.5),
+          rgba(0, 0, 0, 0.5)
+      ), url("../image/bgsi.webp") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }</style>
     <link rel="stylesheet" href="../css/register.css">
 </head>
 <body>
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
-            <a href="home.html">Home</a>
-            <a href="register.php" class="active">Register</a>
-            <a href="signin.php">Login</a>
+           &copy; 2025 DJS Game. All Rights Reserved.
         </nav>
     </header>
 
@@ -122,12 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button type="submit" class="btn">Register</button>
         </form>
-        <p class="login-link">Already have an account? <a href="signin.html">Login here</a></p>
+        <p class="login-link">Already have an account? <a href="signin.php">Login here</a></p>
     </section>
 
-    <footer>
-        &copy; 2025 DJS Game. All rights reserved.
-    </footer>
      <script>
 document.getElementById("password").addEventListener("input", function() {
     let password = this.value;
@@ -156,4 +162,5 @@ document.getElementById("password").addEventListener("input", function() {
 </script>
 
 </body>
+
 </html>

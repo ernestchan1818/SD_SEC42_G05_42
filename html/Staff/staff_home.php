@@ -56,10 +56,11 @@ if ($staffId) {
 
             <span>Welcome, <?php echo htmlspecialchars($username); ?> </span>
             <a href="logoutS.php" class="btn-logout">Logout</a>
+
+        </div>
     </div>
 
     <div class="container">
-
         <h1>Staff Dashboard</h1>
 
         <div class="cards">

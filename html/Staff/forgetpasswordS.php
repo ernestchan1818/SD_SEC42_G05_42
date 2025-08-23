@@ -67,7 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif ($_SESSION['otp'] == $enteredOtp) {
             $email = $_SESSION['reset_email'];
             $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-
             $sql = "UPDATE staff_admin SET password='$hashedPassword' WHERE email='$email'";
 
 
@@ -92,13 +91,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password - DJS Game</title>
+    <style>  body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(
+          rgba(0, 0, 0, 0.5),
+          rgba(0, 0, 0, 0.5)
+      ), url("../Staff/image/fgps.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }</style>
     <link rel="stylesheet" href="forgetpasswordS.css">
 </head>
 <body>
     <header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
-            <a href="home.html">Home</a>
             <a href="registerS.php">Register</a>
             <a href="signinS.php">Login</a>
         </nav>

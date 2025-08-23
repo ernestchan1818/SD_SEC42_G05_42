@@ -143,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
 <header>
     <div class="logo">🎮 DJS Game</div>
     <nav>
-        <a href="home.html">Home</a>
+        <a href="home.php">Home</a>
         <a href="profile.php">Profile</a>
         <a href="logout.php">Logout</a>
     </nav>
