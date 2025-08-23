@@ -16,9 +16,9 @@ session_start();
         <div class="logo">🎮 DJS Game</div>
         <nav>
             <a href="profile.php">Profile</a>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
+            <a href="contact.php">Contact</a>
             <a href="#topup">Top-Up Games</a>
             <a href="signin.php">Sign In</a>
             <a href="register.php">Register</a>
