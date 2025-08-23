@@ -82,6 +82,14 @@ if ($staffId) {
                 <a href="profileS.php" class="btn">Go</a>
             </div>
 
+            <div class="card">
+        <img src="../Staff/image/delete.png" alt="Delete Staff">
+        <h3>Delete Staff</h3>
+        <p>Remove staff accounts from the system.</p>
+        <a href="delete_staff.php" class="btn">Go</a>
+        </div>
+
+
         
         </div>
     </div>

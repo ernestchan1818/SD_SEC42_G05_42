@@ -73,7 +73,7 @@ if (isset($_SESSION['user_id'])) {
     <?php endif; ?>
 </nav>
     </header>
-
+    
     <section id="home" class="hero">
         <img src="../image/backgroundhome.png" alt="Game Background" class="bg-image">
         <div class="hero-text">

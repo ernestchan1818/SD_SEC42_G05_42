@@ -26,6 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - DJS Game</title>
     <link rel="stylesheet" href="../css/contact.css">
+    <style>footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #222;
+    text-align: center;
+    padding: 15px;
+    color: #fff;
+}
+</style>
 </head>
 <body>
     <header>
