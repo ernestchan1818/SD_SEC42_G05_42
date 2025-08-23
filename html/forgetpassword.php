@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="contact.html">Contact</a>
             <a href="registerS.php">Register</a>
         </nav>
+
     </header>
 
     <section class="forgot-password-section">

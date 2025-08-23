@@ -94,12 +94,3 @@ body {
 .btn:hover {
     background: #2980b9;
 }
-
- .profile-pic {
-       width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-            vertical-align: middle;
-  }
