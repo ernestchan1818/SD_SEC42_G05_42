@@ -57,14 +57,21 @@ if (isset($_SESSION['user_id'])) {
                 <span>Welcome！！<?php echo htmlspecialchars($username); ?></span>
             </div>
         <nav>
-            <a href="profile.php">Profile</a>
-            <a href="home.php">Home</a>
-            <a href="about.html">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="#topup">Top-Up Games</a>
-            <a href="signin.php">Sign In</a>
-            <a href="register.php">Register</a>
-        </nav>
+    <a href="profile.php">Profile</a>
+    <a href="home.php">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.php">Contact</a>
+    <a href="#topup">Top-Up Games</a>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <!-- 登录状态 -->
+        <a href="logout.php">Logout</a>
+    <?php else: ?>
+        <!-- 访客状态 -->
+        <a href="signin.php">Sign In</a>
+        <a href="register.php">Register</a>
+    <?php endif; ?>
+</nav>
     </header>
 
     <section id="home" class="hero">

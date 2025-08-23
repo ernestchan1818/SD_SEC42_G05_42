@@ -72,12 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
             <a href="forgetpassword.php">Forget Password?</a>
         </form>
-        <p class="signup-text">Don't have an account? <a href="register.php">Register here</a></p>
-            <div style="margin-top: 15px; text-align: center;">
-            <a href="home.html" class="btn" style="display:inline-block; padding:10px 20px; background:#444; color:#fff; border-radius:5px; text-decoration:none;">
-                Sign In as Guest
-            </a>
-        </div>
         
         <img src="../image/ciallo.jpg" alt="Game Background" class="bg-image">
     </section>
