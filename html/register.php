@@ -120,6 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
     <label for="password">Set Password</label>
     <input type="password" id="password" name="password" placeholder="Enter password" required>
+    <!-- 显示密码按钮 -->
+    <button type="button" id="togglePassword">SHOW</button>
     <!-- 密码强度提示 -->
     <div id="strengthMessage"></div>
             </div>
@@ -133,6 +135,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <p class="login-link">Already have an account? <a href="signin.php">Login here</a></p>
     </section>
+    
+    
+    
+    <script>
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.getElementById("togglePassword");
+
+    toggleButton.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";   // 显示密码
+            toggleButton.textContent = "Hide";
+        } else {
+            passwordInput.type = "password"; // 隐藏密码
+            toggleButton.textContent = "Show";
+        }
+    });
+</script>
 
      <script>
 document.getElementById("password").addEventListener("input", function() {

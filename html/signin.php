@@ -69,10 +69,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <button type="button" id="togglePassword">SHOW</button>
+                
             </div>
             <button type="submit" class="btn">Sign In</button>
             <div style="margin-top: 15px; text-align: center;">
@@ -89,7 +92,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
         
     </section>
-    
+    <script>
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.getElementById("togglePassword");
+
+    toggleButton.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";   // 显示密码
+            toggleButton.textContent = "Hide";
+        } else {
+            passwordInput.type = "password"; // 隐藏密码
+            toggleButton.textContent = "Show";
+        }
+    });
+</script>
     <footer>
         <p>&copy; 2025 DJS Game. All Rights Reserved.</p>
     </footer>

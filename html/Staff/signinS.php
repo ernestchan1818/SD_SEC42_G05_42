@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             exit();
         } else {
-            $message = "Incorrect password!";
+            $message = "Incorrect password or Email!";
             echo "<script>alert('$message');</script>";
         }
     } else {

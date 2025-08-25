@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - DJS Game</title>
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DJS Game</div>
+        <nav>
+    <?php
+    session_start();
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } else {
+            echo '<a href="home.php">Home</a>'; // fallback
+        }
+    } 
+    ?>
+</nav>
+
+    </header>
+
+    <section class="about">
+        <div class="container">
+            <h1>About Us</h1>
+            <p>
+                Welcome to <strong>DJS Game</strong>, your trusted destination for fast, safe, and affordable
+                in-game currency and item top-ups. Whether you’re buying battlepasses, or buying in-game currencies,
+                we’ve got you covered.
+            </p>
+            <p>
+                We partner directly with top game publishers to ensure all transactions are secure, instant,
+                and hassle-free. Our platform supports a wide range of popular games and payment methods, so
+                you can focus on what matters — winning!
+            </p>
+            <p>
+                Founded in 2025, DJS Game is built by gamers, for gamers. We understand the excitement of
+                getting your items instantly, and we’re committed to giving you the best top-up experience
+                possible.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 DJS Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>

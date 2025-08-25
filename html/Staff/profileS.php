@@ -143,7 +143,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
 <header>
     <div class="logo">🎮 DJS Game</div>
     <nav>
-        <a href="staff_home.php">Home</a>
+           <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } else {
+            echo '<a href="signinS.php">Home</a>'; // fallback
+        }
+    } else {
+        echo '<a href="signinS.php">Home</a>'; // 未登录
+    }
+    ?>
         <a href="profileS.php">Profile</a>
         <a href="logoutS.php">Logout</a>
     </nav>

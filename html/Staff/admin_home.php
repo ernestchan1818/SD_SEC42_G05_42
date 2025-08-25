@@ -46,7 +46,7 @@ if ($staffId) {
 </head>
 <body>
       <div class="navbar">
-        <h2>DJS Game Top-up Platform</h2>
+        <h2><a href="aboutS.php" style="color:white;">DJS Game Top-up Platform</a></h2>
         <div class="nav-right">
             <?php if (!empty($avatar)): ?>
                 <img src="<?php echo htmlspecialchars($avatar); ?>" 

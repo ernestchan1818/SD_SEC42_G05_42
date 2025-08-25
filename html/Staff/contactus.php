@@ -23,7 +23,20 @@ $result = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC"
 <header>
     <div class="logo">🎮 DJS Game Staff</div>
     <nav>
-        <a href="dashboard.php">Dashboard</a>
+           <?php
+    session_start();
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } else {
+            echo '<a href="home.php">Home</a>'; // fallback
+        }
+    } else {
+        echo '<a href="home.php">Home</a>'; // 未登录
+    }
+    ?>
         <a href="contactus.php">User Messages</a>
         <a href="logout.php">Logout</a>
     </nav>
