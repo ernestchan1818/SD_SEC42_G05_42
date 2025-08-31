@@ -66,9 +66,9 @@ if ($staffId) {
         <div class="cards">
             <div class="card">
                 <img src="../Staff/image/contact.png" alt="Contact">
-                <h3>View Customer Contact</h3>
-                <p>Check and reply to messages from customers.</p>
-                <a href="contactus.php" class="btn">Go</a>
+                <h3>View Contact Us</h3>
+                <p>Check and View Contact Us.</p>
+                <a href="contact.php" class="btn">Go</a>
             </div>
 
             <div class="card">
@@ -84,6 +84,15 @@ if ($staffId) {
                 <p>Manage your account and update your profile details.</p>
                 <a href="profileS.php" class="btn">Go</a>
             </div>
+            
+             <!-- ✅ 新增 Delete Customer -->
+        <div class="card">
+            <img src="../Staff/image/customer.png" alt="Delete Customer">
+            <h3>Delete Customer</h3>
+            <p>Remove customer accounts from the system.</p>
+            <a href="delete_customer.php" class="btn">Go</a>
+        </div>
+
         </div>
     </div>
 </body>

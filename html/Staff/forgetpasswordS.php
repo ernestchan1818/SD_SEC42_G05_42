@@ -4,22 +4,22 @@ include "config.php";
 require 'src/PHPMailer.php';
 require 'src/SMTP.php';
 require 'src/Exception.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// 路径改成你安装 Composer 后的路径
-
-$mail = new PHPMailer(true);
-
 
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Step 1: User enters email, system sends OTP
     if (isset($_POST["send_otp"])) {
-        $email = $_POST["email"];
-        $sql = "SELECT * FROM users WHERE email='$email'";
+        $email = trim($_POST["email"]); // 去掉空格
+        $sql = "SELECT * FROM staff_admin WHERE email='$email'";
         $result = $conn->query($sql);
+
+        if (!$result) {
+            die("SQL Error: " . $conn->error); // Debug 用
+        }
 
         if ($result->num_rows > 0) {
             $otp = rand(100000, 999999);
@@ -64,18 +64,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "Password must include Uppercase, Lowercase, Number and be at least 8 characters.";
         } elseif ($newPassword !== $confirmPassword) {
             $message = "Passwords do not match.";
-        } elseif ($_SESSION['otp'] == $enteredOtp) {
+        } elseif (isset($_SESSION['otp']) && $_SESSION['otp'] == $enteredOtp) {
             $email = $_SESSION['reset_email'];
             $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-            $sql = "UPDATE staff_admin SET password='$hashedPassword' WHERE email='$email'";
 
+            $sql = "UPDATE staff_admin SET password='$hashedPassword' WHERE email='$email'";
 
             if ($conn->query($sql) === TRUE) {
                 $message = "Password reset successful!";
                 unset($_SESSION['otp']);
                 unset($_SESSION['reset_email']);
             } else {
-                $message = "Error updating password.";
+                $message = "Error updating password: " . $conn->error;
             }
         } else {
             $message = "Invalid OTP.";

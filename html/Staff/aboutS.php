@@ -17,9 +17,7 @@
             echo '<a href="admin_home.php">Home</a>';
         } elseif ($_SESSION['role'] === 'staff') {
             echo '<a href="staff_home.php">Home</a>';
-        } else {
-            echo '<a href="home.php">Home</a>'; // fallback
-        }
+        } 
     } 
     ?>
 </nav>
