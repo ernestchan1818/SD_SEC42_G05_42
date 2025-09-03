@@ -89,13 +89,31 @@ if ($staffId) {
         <a href="delete_staff.php" class="btn">Go</a>
         </div>
 
-         <!-- ✅ 新增 Delete Customer -->
-        <div class="card">
-            <img src="../Staff/image/customer.png" alt="Delete Customer">
-            <h3>Delete Customer</h3>
-            <p>Remove customer accounts from the system.</p>
-            <a href="delete_customer.php" class="btn">Go</a>
-        </div>
+            <!-- ✅ 新增 Delete Customer -->
+            <div class="card">
+                <img src="../Staff/image/customer.png" alt="Delete Customer">
+                <h3>Delete Customer</h3>
+                <p>Remove customer accounts from the system.</p>
+                <a href="delete_customer.php" class="btn">Go</a>
+            </div>
+
+            <!-- ✅ Manage Games -->
+            <div class="card">
+                <img src="../Staff/image/games.webp" alt="Manage Games">
+                <h3>Manage Games</h3>
+                <p>Add, edit, or delete game information.</p>
+                <a href="manage_games.php" class="btn">Go</a>
+            </div>
+
+            <!-- ✅ Manage Top-Up Packages -->
+            <div class="card">
+               <img src="../Staff/image/packages.jpg alt="Manage Top-Up Packages">
+               <h3>Manage Top-Up Packages</h3>
+               <p>Create, edit, or remove top-up packages for customers.</p>
+               <a href="manage_packages.php" class="btn">Go</a>
+            </div>
+
+
 
 
         

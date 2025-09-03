@@ -2,6 +2,11 @@
 session_start();
 include "config.php";
 
+// 只有 admin 可以访问
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login.php");
+    exit();
+}
 
 $message = "";
 
@@ -58,20 +63,35 @@ tr:hover { background:#f1f1f1; }
 .btn { padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-weight:600; }
 .delete-btn { background:#dc3545; color:#fff; }
 .edit-btn { background:#ffc107; color:#fff; }
-.edit-form { width:90%; max-width:900px; margin: 18px auto; padding:16px; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
-.edit-form input { padding:8px; margin:6px 4px; width: calc(50% - 20px); box-sizing:border-box; }
-.edit-form button { padding:10px 14px; background:#28a745; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:600; }
 nav { background-color:#2c3e50; padding:12px 20px; display:flex; align-items:center; gap:20px; border-radius:8px; margin-bottom:20px; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
 nav a { color:white; text-decoration:none; padding:8px 14px; border-radius:6px; transition:0.3s ease; }
 nav a:hover { background-color:#e74c3c; }
 nav a[href*="logout"] { margin-left:auto; background-color:#c0392b; }
 nav a[href*="logout"]:hover { background-color:#e74c3c; }
+
+/* Modal 样式 */
+.modal {
+    display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%;
+    background-color: rgba(0,0,0,0.6); justify-content:center; align-items:center;
+}
+.modal-content {
+    background:#fff; padding:20px; border-radius:8px; width:400px; max-width:95%; text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+.modal-content h3 { margin-bottom:12px; }
+.modal-content input { padding:8px; width:80%; margin:10px 0; }
+.modal-content button { margin:6px; padding:8px 14px; border:none; border-radius:6px; cursor:pointer; font-weight:600; }
+.save-btn { background:#28a745; color:#fff; }
+.cancel-btn { background:#6c757d; color:#fff; }
 </style>
 <script>
-function fillEditForm(customerId, createdAt) {
+function openEditModal(customerId, createdAt) {
+    document.getElementById('modal').style.display = 'flex';
     document.getElementById('edit_customer_id').value = customerId;
     document.getElementById('edit_created_at').value = createdAt;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
 }
 </script>
 </head>
@@ -82,7 +102,7 @@ function fillEditForm(customerId, createdAt) {
     <nav>
         <a href="admin_home.php">Home</a>
         <a href="contactus.php">User Messages</a>
-        <a href="logoutS.php">Logout</a>
+        <a href="logout.php">Logout</a>
     </nav>
 </header>
 
@@ -91,16 +111,6 @@ function fillEditForm(customerId, createdAt) {
 <?php if ($message !== ""): ?>
     <div class="message"><?= htmlspecialchars($message); ?></div>
 <?php endif; ?>
-
-<!-- Edit Customer -->
-<div class="edit-form">
-    <h3>Edit Customer Date</h3>
-    <form method="post">
-        <input type="hidden" name="customer_id" id="edit_customer_id">
-        <input type="date" name="created_at" id="edit_created_at" required>
-        <button type="submit" name="edit_customer">Update Date</button>
-    </form>
-</div>
 
 <!-- Customer Table -->
 <table>
@@ -118,7 +128,7 @@ function fillEditForm(customerId, createdAt) {
             <td><?= htmlspecialchars($row['email']); ?></td>
             <td><?= date('Y-m-d', strtotime($row['created_at'])); ?></td>
             <td>
-                <button class="btn edit-btn" type="button" onclick="fillEditForm('<?= $row['id']; ?>','<?= date('Y-m-d', strtotime($row['created_at'])); ?>')">Edit Date</button>
+                <button class="btn edit-btn" type="button" onclick="openEditModal('<?= $row['id']; ?>','<?= date('Y-m-d', strtotime($row['created_at'])); ?>')">Edit Date</button>
                 <form method="post" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this customer?');">
                     <input type="hidden" name="delete_id" value="<?= $row['id']; ?>">
                     <button class="btn delete-btn" type="submit">Delete</button>
@@ -127,6 +137,19 @@ function fillEditForm(customerId, createdAt) {
         </tr>
     <?php endwhile; ?>
 </table>
+
+<!-- Edit Modal -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Customer Date</h3>
+        <form method="post">
+            <input type="hidden" name="customer_id" id="edit_customer_id">
+            <input type="date" name="created_at" id="edit_created_at" required><br>
+            <button type="submit" name="edit_customer" class="save-btn">Save</button>
+            <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
