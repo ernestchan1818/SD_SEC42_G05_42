@@ -13,8 +13,10 @@
         <nav>
             <a href="homecustomer.php">Home</a>
             <a href="about.html">About</a>
-            <a href="contact.php">Contact</a>
-            <a href="#topup">Top-Up Games</a>
+            <a href="feedback.php">Contact</a>
+            <a href="contact.php">Feedback</a>
+            <a href="view_games.php">Top-Up Games</a>
+            <a href="view_packages.php">Top-Up Packages</a>
             <a href="signout.php">Sign Out</a>
         </nav>
     </header>

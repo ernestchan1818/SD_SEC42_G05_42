@@ -37,7 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
       <a href="home.php">Home</a>
       <a href="about.html">About</a>
-      <a href="contact.php">Contact</a>
+      <a href="feedback.php">Contact</a>
+      <a href="contact.php">Feedback</a>
+      <a href="view_games.php">Top-Up Games</a>
+      <a href="view_packages.php">Top-Up Packages</a>
       <a href="register.php">Register</a>
     </nav>
   </header>

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - DJS Game</title>
+    <title>Feedback - DJS Game</title>
     <link rel="stylesheet" href="../css/contact.css">
     <style>footer {
     position: fixed;
@@ -42,8 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="logo">🎮 DJS Game</div>
         <nav>
             <a href="home.php">Home</a>
-            <a href="about.html">About Us</a>
-            <a href="contact.php">Contact Us</a>
+            <a href="about.html">About</a>
+            <a href="feedback.php">Contact</a>
+            <a href="contact.php">Feedback</a>
+            <a href="view_games.php">Top-Up Games</a>
+            <a href="view_packages.php">Top-Up Packages</a>
             <a href="register.php">Register</a>
             <a href="signin.php">Sign In</a>
         </nav>
