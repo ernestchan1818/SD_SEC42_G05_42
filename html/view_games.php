@@ -53,10 +53,10 @@ function getImagePath($path) {
 <header>
     <div class="logo">🎮 DJS Game</div>
     <nav>
-        <a href="homecustomer.php">Home</a>
+        <a href="home.php">Home</a>
         <a href="about.html">About</a>
-        <a href="feedback.php">Contact</a>
-        <a href="contact.php">Feedback</a>
+        <a href="Contact.php">Contact</a>
+        <a href="Feedback.php">Feedback</a>
         <a href="view_games.php">Top-Up Games</a>
         <a href="view_packages.php">Top-Up Packages</a>
         <a href="signout.php">Sign Out</a>

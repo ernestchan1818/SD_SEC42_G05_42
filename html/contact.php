@@ -1,79 +1,54 @@
-
-<?php
-include "config.php";
-
-$message = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $msg = trim($_POST['message']);
-
-    $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, message) VALUES (?,?,?)");
-    $stmt->bind_param("sss", $name, $email, $msg);
-
-    if ($stmt->execute()) {
-        $message = "Your message has been sent! We will get back to you soon.";
-    } else {
-        $message = "Failed to send your message. Try again later.";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback - DJS Game</title>
-    <link rel="stylesheet" href="../css/contact.css">
-    <style>footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #222;
-    text-align: center;
-    padding: 15px;
-    color: #fff;
-}
-</style>
+    <title>Contact Us - GameStore</title>
+    <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-    <header>
+
+<header>
         <div class="logo">🎮 DJS Game</div>
         <nav>
             <a href="home.php">Home</a>
             <a href="about.html">About</a>
-            <a href="feedback.php">Contact</a>
-            <a href="contact.php">Feedback</a>
+            <a href="Contact.php">Contact</a>
+            <a href="Feedback.php">Feedback</a>
             <a href="view_games.php">Top-Up Games</a>
             <a href="view_packages.php">Top-Up Packages</a>
-            <a href="register.php">Register</a>
-            <a href="signin.php">Sign In</a>
+            <a href="signout.php">Sign Out</a>
         </nav>
     </header>
 
-    <section class="contact-hero">
+<section class="hero">
+    <img src="feedback-bg.jpg" alt="Background" class="bg-image">
+    <div class="hero-text">
         <h1>Contact Us</h1>
-        <p>We’d love to hear from you! Fill out the form below and we’ll get back to you as soon as possible.</p>
-    </section>
+        <p>We’d love to hear from you. Reach us via phone or email below.</p>
+    </div>
+</section>
 
-    <section class="contact-form-section">
-        <form action="#" method="post" class="contact-form">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your Name" required>
+<section class="payment">
+    <h2>Our Contact Information</h2>
+    <div style="max-width:500px; margin:0 auto; text-align:left; font-size:1.2em; line-height:1.8;">
+        <p><strong>📞 Phone:</strong> +60 12-345 6789</p>
+        <p><strong>✉️ Email:</strong> djssupport@gmail.com</p>
+    </div>
+</section>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Your Email" required>
+<footer>
+    <p>&copy; 2025 DJS Game. All Rights Reserved.</p>
+</footer>
 
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
-
-            <button type="submit" class="btn">Send Message</button>
-        </form>
-    </section>
-
-    <footer>
-        &copy; 2025 DJS Game. All rights reserved.
-    </footer>
+<script>
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute("href"))
+                    .scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    </script>
 </body>
 </html>

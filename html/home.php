@@ -58,12 +58,13 @@ if (isset($_SESSION['user_id'])) {
             </div>
         <nav>
     <a href="profile.php">Profile</a>
-    <a href="home.php">Home</a>
-    <a href="about.html">About</a>
-    <a href="contact.php">Contact</a>
-    <a href="view_games.php">Available Games</a>
-    <a href="view_packages.php">Top-Up Packages</a>
-
+            <a href="home.php">Home</a>
+            <a href="about.html">About</a>
+            <a href="Contact.php">Contact</a>
+            <a href="Feedback.php">Feedback</a>
+            <a href="view_games.php">Top-Up Games</a>
+            <a href="view_packages.php">Top-Up Packages</a>
+            <a href="signout.php">Sign Out</a>
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <!-- 登录状态 -->

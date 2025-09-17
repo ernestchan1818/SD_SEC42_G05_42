@@ -13,7 +13,7 @@ $message = "";
 // ----------------- Handle POST ------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // ---- Add Game (Category) ----
+    // ---- Add Game ----
     if (isset($_POST['add_game'])) {
         $game_name = trim($_POST['game_name']);
         $description = trim($_POST['description']);
@@ -21,38 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($_FILES['image']['name'])) {
             $fileBaseName = basename($_FILES["image"]["name"]);
+            $targetDir = "uploads/games/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            $targetFile = $targetDir . $fileBaseName;
 
-            // 检查是否已有相同文件名
-            $check = $conn->prepare("SELECT COUNT(*) FROM games WHERE image LIKE ?");
-            $check->bind_param("s", $fileBaseNameCheck);
-            $fileBaseNameCheck = "%$fileBaseName%";
-            $check->execute();
-            $check->bind_result($count);
-            $check->fetch();
-            $check->close();
-
-            if ($count > 0) {
-                $message = "⚠ Image file already exists. Game not added.";
-            } else {
-                $targetDir = "uploads/games/";
-                if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-
-                $targetFile = $targetDir . $fileBaseName;
-                if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-                    $imagePath = $targetFile;
-                }
-
-                $stmt = $conn->prepare("INSERT INTO games (game_name, description, image) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $game_name, $description, $imagePath);
-                $stmt->execute();
-                $stmt->close();
-
-                if (!$message) $message = "✅ Game Category added.";
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                $imagePath = $targetFile;
             }
         }
+
+        $stmt = $conn->prepare("INSERT INTO games (game_name, description, image) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $game_name, $description, $imagePath);
+        $stmt->execute();
+        $stmt->close();
+
+        $message = "✅ Game Category added.";
     }
 
-    // ---- Add Item under Game ----
+    // ---- Add Item ----
     if (isset($_POST['add_item'])) {
         $game_id = $_POST['game_id'];
         $item_name = trim($_POST['item_name']);
@@ -61,35 +47,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($_FILES['image']['name'])) {
             $fileBaseName = basename($_FILES["image"]["name"]);
+            $targetDir = "uploads/items/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            $targetFile = $targetDir . $fileBaseName;
 
-            // 检查是否已有相同文件名
-            $check = $conn->prepare("SELECT COUNT(*) FROM game_items WHERE image LIKE ?");
-            $check->bind_param("s", $fileBaseNameCheck);
-            $fileBaseNameCheck = "%$fileBaseName%";
-            $check->execute();
-            $check->bind_result($count);
-            $check->fetch();
-            $check->close();
-
-            if ($count > 0) {
-                $message = "⚠ Image file already exists. Item not added.";
-            } else {
-                $targetDir = "uploads/items/";
-                if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-
-                $targetFile = $targetDir . $fileBaseName;
-                if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-                    $imagePath = $targetFile;
-                }
-
-                $stmt = $conn->prepare("INSERT INTO game_items (game_id, item_name, price, image) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("isds", $game_id, $item_name, $price, $imagePath);
-                $stmt->execute();
-                $stmt->close();
-
-                if (!$message) $message = "✅ Item added.";
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                $imagePath = $targetFile;
             }
         }
+
+        $stmt = $conn->prepare("INSERT INTO game_items (game_id, item_name, price, image) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isds", $game_id, $item_name, $price, $imagePath);
+        $stmt->execute();
+        $stmt->close();
+
+        $message = "✅ Item added.";
+    }
+
+    // ---- Edit Game ----
+    if (isset($_POST['edit_game'])) {
+        $id = $_POST['game_id'];
+        $game_name = trim($_POST['game_name']);
+        $description = trim($_POST['description']);
+
+        $oldImg = $conn->query("SELECT image FROM games WHERE game_id=$id")->fetch_assoc()['image'];
+        $imagePath = $oldImg;
+
+        if (!empty($_FILES['image']['name'])) {
+            $fileBaseName = basename($_FILES["image"]["name"]);
+            $targetDir = "uploads/games/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+            $targetFile = $targetDir . $fileBaseName;
+
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                $imagePath = $targetFile;
+            }
+        }
+
+        $stmt = $conn->prepare("UPDATE games SET game_name=?, description=?, image=? WHERE game_id=?");
+        $stmt->bind_param("sssi", $game_name, $description, $imagePath, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $message = "✏️ Game updated.";
+    }
+
+    // ---- Edit Item ----
+    if (isset($_POST['edit_item'])) {
+        $id = $_POST['item_id'];
+        $item_name = trim($_POST['item_name']);
+        $price = $_POST['price'];
+
+        $stmt = $conn->prepare("UPDATE game_items SET item_name=?, price=? WHERE item_id=?");
+        $stmt->bind_param("sdi", $item_name, $price, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $message = "✏️ Item updated.";
     }
 
     // ---- Delete Game ----
@@ -124,7 +138,7 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
         .card { background:#ffffff; padding:15px; margin:15px 0; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.2);}
         h2 { color:#007bff; }
         input, textarea, select { width:100%; padding:8px; margin:6px 0; border:1px solid #ccc; border-radius:4px; background:#e9f5ff; color:#333; }
-        button { background:#007bff; color:#fff; border:none; padding:8px 14px; border-radius:5px; cursor:pointer; }
+        button { background:#007bff; color:#fff; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; margin:2px; }
         table { width:100%; border-collapse:collapse; margin-top:15px; }
         th, td { border:1px solid #ccc; padding:8px; text-align:center; }
         th { background:#007bff; color:#fff; }
@@ -184,6 +198,19 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
                 <img src="<?= htmlspecialchars($game['image']) ?>" alt="Game Image">
             <?php endif; ?>
 
+            <!-- Edit Game -->
+            <details>
+                <summary>✏️ Edit Game</summary>
+                <form method="post" enctype="multipart/form-data" style="margin-top:10px;">
+                    <input type="hidden" name="game_id" value="<?= $game['game_id'] ?>">
+                    <input type="text" name="game_name" value="<?= htmlspecialchars($game['game_name']) ?>" required>
+                    <textarea name="description"><?= htmlspecialchars($game['description']) ?></textarea>
+                    <input type="file" name="image" accept="image/*">
+                    <button type="submit" name="edit_game">Save Changes</button>
+                </form>
+            </details>
+
+            <!-- Delete Game -->
             <form method="post" style="margin-top:10px;">
                 <input type="hidden" name="delete_game" value="<?= $game['game_id'] ?>">
                 <button type="submit" onclick="return confirm('Delete this game and all its items?')">🗑 Delete Game</button>
@@ -202,7 +229,18 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
                             <td>RM <?= number_format($item['price'],2) ?></td>
                             <td><?php if ($item['image']): ?><img src="<?= htmlspecialchars($item['image']) ?>"><?php endif; ?></td>
                             <td>
-                                <form method="post">
+                                <!-- Edit Item -->
+                                <details>
+                                    <summary>✏️ Edit</summary>
+                                    <form method="post" style="margin-top:6px;">
+                                        <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">
+                                        <input type="text" name="item_name" value="<?= htmlspecialchars($item['item_name']) ?>" required>
+                                        <input type="number" step="0.01" name="price" value="<?= number_format($item['price'],2) ?>" required>
+                                        <button type="submit" name="edit_item">Save</button>
+                                    </form>
+                                </details>
+                                <!-- Delete Item -->
+                                <form method="post" style="display:inline;">
                                     <input type="hidden" name="delete_item" value="<?= $item['item_id'] ?>">
                                     <button type="submit" onclick="return confirm('Delete this item?')">🗑 Delete</button>
                                 </form>

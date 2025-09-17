@@ -77,7 +77,18 @@ body { margin:0; font-family: Arial,sans-serif; background:#000; color:#fff; }
 <div class="navbar">
     <h1>🎁 Available Packages</h1>
 </div>
-
+<header>
+    <div class="logo">🎮 DJS Game</div>
+    <nav>
+        <a href="home.php">Home</a>
+        <a href="about.html">About</a>
+        <a href="Contact.php">Contact</a>
+        <a href="Feedback.php">Feedback</a>
+        <a href="view_games.php">Top-Up Games</a>
+        <a href="view_packages.php">Top-Up Packages</a>
+        <a href="signout.php">Sign Out</a>
+    </nav>
+</header>
 <div class="package-container">
 <?php
 $packages->data_seek(0);

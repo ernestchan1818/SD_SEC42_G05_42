@@ -107,7 +107,7 @@ if ($staffId) {
 
             <!-- ✅ Manage Top-Up Packages -->
             <div class="card">
-               <img src="../Staff/image/packages.jpg alt="Manage Top-Up Packages">
+               <img src="../Staff/image/packages.jpg" alt="Manage Top-Up Packages">
                <h3>Manage Top-Up Packages</h3>
                <p>Create, edit, or remove top-up packages for customers.</p>
                <a href="manage_packages.php" class="btn">Go</a>
