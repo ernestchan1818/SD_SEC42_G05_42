@@ -22,20 +22,18 @@
     </header>
 
 <section class="hero">
-    <img src="feedback-bg.jpg" alt="Background" class="bg-image">
+
     <div class="hero-text">
         <h1>Contact Us</h1>
         <p>We’d love to hear from you. Reach us via phone or email below.</p>
-    </div>
-</section>
-
-<section class="payment">
-    <h2>Our Contact Information</h2>
+        <h2>Our Contact Information</h2>
     <div style="max-width:500px; margin:0 auto; text-align:left; font-size:1.2em; line-height:1.8;">
+        
         <p><strong>📞 Phone:</strong> +60 12-345 6789</p>
         <p><strong>✉️ Email:</strong> djssupport@gmail.com</p>
     </div>
 </section>
+
 
 <footer>
     <p>&copy; 2025 DJS Game. All Rights Reserved.</p>

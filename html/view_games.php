@@ -24,7 +24,7 @@ function getImagePath($path) {
 <title>Available Games</title>
 <style>
     body { margin:0; font-family: Arial,sans-serif; background:#000; color:#fff; overflow-y: auto; }
-    header { background:darkgrey ;padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+    header { background:#343434 ;padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
     header .logo { font-size:20px; font-weight:bold; color:#fff; }
     header nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: 500; transition: color 0.3s ease, border-bottom 0.3s ease; }
     header nav a:hover { color: #f39c12; border-bottom: 2px solid #f39c12; padding-bottom: 3px; }

@@ -29,8 +29,12 @@ function getImagePath($path) {
 <title>Available Packages</title>
 <style>
 body { margin:0; font-family: Arial,sans-serif; background:#000; color:#fff; }
-.navbar { background:#ff6600; padding:14px 20px; display:flex; align-items:center; }
+ header { background:#343434 ;padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+.navbar { background:#767d80; padding:14px 20px; display:flex; align-items:center; justify-content:center; }
 .navbar h1 { margin:0; font-size:20px; color:#fff; }
+ header .logo { font-size:20px; font-weight:bold; color:#fff; }
+header nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: 500; transition: color 0.3s ease, border-bottom 0.3s ease; }
+header nav a:hover { color: #f39c12; border-bottom: 2px solid #f39c12; padding-bottom: 3px; }
 
 .package-container { display:grid; grid-template-columns: repeat(auto-fit, minmax(350px,1fr)); gap:20px; padding:20px; }
 .package-card { 
@@ -74,9 +78,7 @@ body { margin:0; font-family: Arial,sans-serif; background:#000; color:#fff; }
 </head>
 <body>
 
-<div class="navbar">
-    <h1>🎁 Available Packages</h1>
-</div>
+
 <header>
     <div class="logo">🎮 DJS Game</div>
     <nav>
@@ -88,7 +90,11 @@ body { margin:0; font-family: Arial,sans-serif; background:#000; color:#fff; }
         <a href="view_packages.php">Top-Up Packages</a>
         <a href="signout.php">Sign Out</a>
     </nav>
+    
 </header>
+<div class="navbar">
+    <h1>🎁 Available Packages</h1>
+</div>
 <div class="package-container">
 <?php
 $packages->data_seek(0);
