@@ -156,9 +156,24 @@ function closeModal() {
 <body>
 <header class="nav">
     <div class="logo">🎮 DJS Game Staff</div>
-    <a href="admin_home.php">Home</a>
-    <a href="contactus.php">User Messages</a>
-    <a class="logout" href="logoutS.php">Logout</a>
+     <nav>
+            <nav>
+    <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } 
+    } 
+    ?>
+            <a href="Contact.php">Contact</a>
+            <a href="contactus.php">Feedback</a>
+            <a href="manage_games.php">Top-Up Games</a>
+            <a href="manage_packages.php">Top-Up Packages</a>
+            <a href="logoutS.php">Sign Out</a>
+        </nav>
+    </header>
 </header>
 
 <h2>Manage Staff Accounts</h2>

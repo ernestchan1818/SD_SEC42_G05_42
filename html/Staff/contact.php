@@ -10,14 +10,23 @@
 
 <header>
         <div class="logo">🎮 DJS Game</div>
-        <nav>
-            <a href="home.php">Home</a>
-            <a href="about.html">About</a>
+        
+         <nav>
+    <?php
+    session_start();
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } 
+    } 
+    ?>
             <a href="Contact.php">Contact</a>
-            <a href="Feedback.php">Feedback</a>
-            <a href="view_games.php">Top-Up Games</a>
-            <a href="view_packages.php">Top-Up Packages</a>
-            <a href="signout.php">Sign Out</a>
+            <a href="contactus.php">Feedback</a>
+            <a href="manage_games.php">Top-Up Games</a>
+            <a href="manage_packages.php">Top-Up Packages</a>
+            <a href="logoutS.php">Sign Out</a>
         </nav>
     </header>
 

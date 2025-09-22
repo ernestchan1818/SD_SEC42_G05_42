@@ -2,11 +2,6 @@
 session_start();
 include "config.php";
 
-// 只有 admin 可以访问
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php");
-    exit();
-}
 
 $message = "";
 
@@ -98,12 +93,24 @@ function closeModal() {
 <body>
 
 <header>
-    <div class="logo">🎮 DJS Game Admin</div>
-    <nav>
-        <a href="admin_home.php">Home</a>
-        <a href="contactus.php">User Messages</a>
-        <a href="logout.php">Logout</a>
-    </nav>
+    <div class="logo">🎮 DJS Game Staff</div>
+            <nav>
+    <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } 
+    } 
+    ?>
+            <a href="Contact.php">Contact</a>
+            <a href="contactus.php">Feedback</a>
+            <a href="view_games.php">Top-Up Games</a>
+            <a href="view_packages.php">Top-Up Packages</a>
+            <a href="signout.php">Sign Out</a>
+        </nav>
+    </header>
 </header>
 
 <h1>Manage Customers</h1>

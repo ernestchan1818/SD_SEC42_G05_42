@@ -106,7 +106,8 @@ $packages = $conn->query("SELECT * FROM topup_packages ORDER BY created_at DESC"
 <title>Manage Top-up Packages</title>
 <style>
 body { font-family: Arial,sans-serif; background:#e0f0ff; color:#000; margin:0; }
-.navbar { background:#007bff; padding:14px 20px; display:flex; align-items:center; }
+.navbar { background:#007bff; padding:12px; }
+ .navbar a { color:#fff; text-decoration:none; margin-left:120px; font-weight:600; }
 .navbar h1 { margin:0; font-size:20px; color:#fff; }
 .container { padding:20px; }
 .card { background:#fff; padding:15px; margin:15px 0; border-radius:8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -124,6 +125,9 @@ img { max-width:80px; }
 .modal-content { background:#fff; padding:20px; border-radius:8px; width:400px; max-height:80vh; overflow-y:auto; }
 .modal-content h3 { margin-top:0; }
 .close-btn { background:#dc3545; }
+.nav { width:90%; max-width:1100px; margin:0 auto 12px; display:flex; gap:12px; align-items:center; }
+.nav a { text-decoration:none; background:#2c3e50; color:#fff; padding:8px 12px; border-radius:6px; }
+.nav a.logout { margin-left:auto; background:#c0392b; }
 </style>
 <script>
 function showItemsByGame() {
@@ -167,14 +171,26 @@ function closeEditModal() {
 <body>
 
 <div class="navbar">
-    <h1>🎁 Manage Top-up Packages</h1>
-    <a href="admin_home.php">🏠 Home</a>
-    <a href="manage_games.php">🎮 Manage Games</a>
-    <a href="logoutS.php">🚪 Logout</a>
+    <nav>
+    <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } 
+    } 
+    ?>
+            <a href="Contact.php">Contact</a>
+            <a href="contactus.php">Feedback</a>
+            <a href="manage_games.php">Top-Up Games</a>
+            <a href="manage_packages.php">Top-Up Packages</a>
+            <a href="logoutS.php">Sign Out</a>
+        </nav>
 </div>
 
 <div class="container">
-
+ <h1>🎁 Manage Top-up Packages</h1>
 <?php if($message): ?>
 <div class="msg"><?= htmlspecialchars($message) ?></div>
 <?php endif; ?>

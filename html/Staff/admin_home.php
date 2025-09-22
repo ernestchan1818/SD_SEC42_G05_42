@@ -72,7 +72,7 @@ if ($staffId) {
                 <img src="../Staff/image/feedback.png" alt="Feedback">
                 <h3>View Feedback</h3>
                 <p>Read customer feedback and improve our service.</p>
-                <a href="view_feedback.php" class="btn">Go</a>
+                <a href="contactus.php" class="btn">Go</a>
             </div>
 
             <div class="card">

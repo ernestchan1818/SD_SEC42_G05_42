@@ -144,14 +144,30 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
         th { background:#007bff; color:#fff; }
         img { max-width:80px; }
         .msg { background:#17a2b8; padding:8px; margin-bottom:15px; border-radius:5px; color:#fff; }
+        .nav { width:90%; max-width:1100px; margin:0 auto 12px; display:flex; gap:12px; align-items:center; }
+.nav a { text-decoration:none; background:#2c3e50; color:#fff; padding:8px 12px; border-radius:6px; }
+.nav a.logout { margin-left:auto; background:#c0392b; }
     </style>
 </head>
 <body>
 
 <div class="navbar">
-    <a href="admin_home.php">🏠 Home</a>
-    <a href="manage_games.php">🎮 Manage Games</a>
-    <a href="logoutS.php">🚪 Logout</a>
+     <nav>
+    <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'admin') {
+            echo '<a href="admin_home.php">Home</a>';
+        } elseif ($_SESSION['role'] === 'staff') {
+            echo '<a href="staff_home.php">Home</a>';
+        } 
+    } 
+    ?>
+            <a href="Contact.php">Contact</a>
+            <a href="contactus.php">Feedback</a>
+            <a href="view_games.php">Top-Up Games</a>
+            <a href="view_packages.php">Top-Up Packages</a>
+            <a href="signout.php">Sign Out</a>
+        </nav>
 </div>
 
 <div class="container">

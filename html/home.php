@@ -64,7 +64,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="Feedback.php">Feedback</a>
             <a href="view_games.php">Top-Up Games</a>
             <a href="view_packages.php">Top-Up Packages</a>
-            <a href="signout.php">Sign Out</a>
+            
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <!-- 登录状态 -->
