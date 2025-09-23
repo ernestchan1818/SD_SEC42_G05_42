@@ -17,7 +17,14 @@
             <a href="Feedback.php">Feedback</a>
             <a href="view_games.php">Top-Up Games</a>
             <a href="view_packages.php">Top-Up Packages</a>
-            <a href="signout.php">Sign Out</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+        <!-- 登录状态 -->
+        <a href="logout.php">Logout</a>
+    <?php else: ?>
+        <!-- 访客状态 -->
+        <a href="signin.php">Sign In</a>
+        <a href="register.php">Register</a>
+    <?php endif; ?>
         </nav>
     </header>
 

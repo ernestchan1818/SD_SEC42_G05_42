@@ -164,8 +164,8 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
     ?>
             <a href="Contact.php">Contact</a>
             <a href="contactus.php">Feedback</a>
-            <a href="view_games.php">Top-Up Games</a>
-            <a href="view_packages.php">Top-Up Packages</a>
+            <a href="manage_games.php">Top-Up Games</a>
+            <a href="manage_packages.php">Top-Up Packages</a>
             <a href="signout.php">Sign Out</a>
         </nav>
 </div>

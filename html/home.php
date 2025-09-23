@@ -30,6 +30,57 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DJS Game</title>
+    <style>
+header { 
+    background: linear-gradient(90deg, #0b0b0b, #2a2a2a 40%, #0b0b0b); /* 黑灰渐变 */
+    padding: 14px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #c75c2b; /* 底部橙色线条 */
+    box-shadow: 0 3px 12px rgba(199,92,43,0.2); /* 橙色柔光 */
+}
+
+/* logo */
+header .logo { 
+    font-size: 22px; 
+    font-weight: bold; 
+    color: #ff6600;  /* 亮橙 logo */
+    letter-spacing: 1px;
+}
+
+/* 导航链接 */
+header nav a { 
+    color: #eee; 
+    margin: 0 18px; 
+    text-decoration: none; 
+    font-weight: 500; 
+    position: relative;
+    transition: color 0.3s ease; 
+}
+
+/* 下划线 hover 动画 */
+header nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: #c75c2b;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: right;
+}
+
+header nav a:hover {
+    color: #c75c2b; 
+}
+
+header nav a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}</style>
     <link rel="stylesheet" href="../css/home.css">
      <style>
         .nav-user {
