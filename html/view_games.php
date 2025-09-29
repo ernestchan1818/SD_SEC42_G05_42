@@ -311,7 +311,13 @@ header nav a:hover {
         <div class="total-box">
             Total: <span>RM <span id="total-<?= $gameId ?>">0.00</span></span>
         </div>
-        <button class="pay-btn">Pay</button>
+        <form method="POST" action="payment.php" onsubmit="return saveToSession(<?= $gameId ?>)">
+    <input type="hidden" name="game_id" value="<?= $gameId ?>">
+    <button type="submit" class="pay-btn">Pay</button>
+</form>
+
+</form>
+
     </div>
 </div>
 <?php endforeach; ?>
@@ -346,6 +352,60 @@ function openZoom(src) {
 function closeZoom() {
     document.getElementById("zoomModal").style.display = "none";
 }
+
+function saveToSession(gameId) {
+    if (!cart[gameId] || Object.keys(cart[gameId]).length === 0) {
+        alert("Please select at least one item.");
+        return false;
+    }
+    let orderData = JSON.stringify(cart[gameId]);
+
+    // AJAX 保存到 session
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "save_order.php", false); // 同步请求，保证保存后再跳转
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("game_id=" + gameId + "&order_data=" + encodeURIComponent(orderData));
+
+    return true; // 提交表单继续去 payment.php
+}
+
+
+let cart = {}; // 保存所有选择的 item
+
+function changeQty(gameId, itemId, delta, price) {
+    let qtyEl = document.getElementById("qty-" + itemId);
+    let qty = parseInt(qtyEl.innerText) + delta;
+    if (qty < 0) qty = 0;
+    qtyEl.innerText = qty;
+
+    if (!cart[gameId]) cart[gameId] = {};
+
+    // 更新购物车
+    if (qty > 0) {
+        cart[gameId][itemId] = { qty: qty, price: price };
+    } else {
+        delete cart[gameId][itemId];
+    }
+
+    // 计算总价
+    let total = 0;
+    for (let id in cart[gameId]) {
+        total += cart[gameId][id].qty * cart[gameId][id].price;
+    }
+    document.getElementById("total-" + gameId).innerText = total.toFixed(2);
+}
+
+// 在提交之前准备数据
+function prepareOrder(gameId) {
+    if (!cart[gameId] || Object.keys(cart[gameId]).length === 0) {
+        alert("Please select at least one item.");
+        return false; // 阻止提交
+    }
+    let orderData = JSON.stringify(cart[gameId]);
+    document.getElementById("order-data-" + gameId).value = orderData;
+    return true; // 允许提交
+}
+
 </script>
 
 </body>
