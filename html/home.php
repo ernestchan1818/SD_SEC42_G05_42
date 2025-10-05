@@ -115,7 +115,7 @@ header nav a:hover::after {
             <a href="Feedback.php">Feedback</a>
             <a href="view_games.php">Top-Up Games</a>
             <a href="view_packages.php">Top-Up Packages</a>
-            
+            <a href="my_order.php">Track</a>
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <!-- 登录状态 -->

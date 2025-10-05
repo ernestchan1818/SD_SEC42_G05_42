@@ -113,6 +113,14 @@ if ($staffId) {
                <a href="manage_packages.php" class="btn">Go</a>
             </div>
 
+            <!-- ✅ View Customer Orders -->
+<div class="card">
+   <img src="../Staff/image/orders.jpg" alt="View Orders">
+   <h3>View Customer Orders</h3>
+   <p>Check customer orders, view items, and update delivery status.</p>
+   <a href="view_order.php" class="btn">Go</a>
+</div>
+
 
 
 

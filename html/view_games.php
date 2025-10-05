@@ -311,9 +311,14 @@ header nav a:hover {
         <div class="total-box">
             Total: <span>RM <span id="total-<?= $gameId ?>">0.00</span></span>
         </div>
-        <form method="POST" action="payment.php" onsubmit="return saveToSession(<?= $gameId ?>)">
-    <input type="hidden" name="game_id" value="<?= $gameId ?>">
-    <button type="submit" class="pay-btn">Pay</button>
+        <form method="POST" action="save_order.php" onsubmit="return prepareOrder(<?= $gameId ?>)">
+  <input type="hidden" name="game_id" value="<?= $gameId ?>">
+  <input type="hidden" name="order_items" id="order-items-<?= $gameId ?>">
+  <button type="submit" class="pay-btn">Pay</button>
+</form>
+
+</form>
+
 </form>
 
 </form>
@@ -397,13 +402,13 @@ function changeQty(gameId, itemId, delta, price) {
 
 // 在提交之前准备数据
 function prepareOrder(gameId) {
-    if (!cart[gameId] || Object.keys(cart[gameId]).length === 0) {
-        alert("Please select at least one item.");
-        return false; // 阻止提交
-    }
-    let orderData = JSON.stringify(cart[gameId]);
-    document.getElementById("order-data-" + gameId).value = orderData;
-    return true; // 允许提交
+  // cart[gameId] 是你之前保存的结构
+  if (!cart[gameId] || Object.keys(cart[gameId]).length === 0) {
+    alert("Please select at least one item.");
+    return false;
+  }
+  document.getElementById("order-items-" + gameId).value = JSON.stringify(cart[gameId]);
+  return true;
 }
 
 </script>

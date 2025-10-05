@@ -2,48 +2,101 @@
 include "config.php";
 session_start();
 
-// 假设用户已登录
-$user_id = $_SESSION['user_id'] ?? 1; 
+// ✅ 确保每个用户独立订单
+$user_id = $_SESSION['user_id'] ?? 0;
 $username = $_SESSION['username'] ?? "Demo User";
 
-// 检查 session 是否有订单
-if (!isset($_SESSION['order'])) {
+// ✅ 检查是否存在该用户的订单
+if (!isset($_SESSION['orders'][$user_id])) {
     die("No order found. Please go back and select items first.");
 }
 
-$order = $_SESSION['order'];
+$order = $_SESSION['orders'][$user_id];
 $gameId = $order['game_id'];
 $orderItems = $order['items'];
 
-$order_id = uniqid("ORD_"); // 订单号
-$items = [];
-$total = 0;
+// ===== 防止重复生成订单 =====
+if (!isset($_SESSION['current_order_id'])) {
+    // 第一次生成订单
+    $order_id = uniqid("ORD_");
+    $_SESSION['current_order_id'] = $order_id;
 
-// 遍历购物车，查数据库补全 item 信息
-foreach ($orderItems as $itemId => $data) {
-    $qty = (int)$data['qty'];
-    $price = (float)$data['price'];
+    $items = [];
+    $total = 0;
 
-    // 查询数据库，拿 item 名称和图片
-    $stmt = $conn->prepare("SELECT item_name, image FROM game_items WHERE item_id = ?");
-    $stmt->bind_param("i", $itemId);
-    $stmt->execute();
-    $stmt->bind_result($name, $image);
-    if ($stmt->fetch()) {
-        $subtotal = $qty * $price;
-        $items[] = [
-            "name" => $name,
-            "img" => $image,
-            "qty" => $qty,
-            "price" => $price,
-            "subtotal" => $subtotal
-        ];
-        $total += $subtotal;
+    // 遍历购物车计算总价
+    foreach ($orderItems as $itemId => $data) {
+        $qty = (int)$data['qty'];
+        $price = (float)$data['price'];
+
+        $stmt = $conn->prepare("SELECT item_name, image FROM game_items WHERE item_id = ?");
+        $stmt->bind_param("i", $itemId);
+        $stmt->execute();
+        $stmt->bind_result($name, $image);
+        if ($stmt->fetch()) {
+            $subtotal = $qty * $price;
+            $items[] = [
+                "name" => $name,
+                "img" => $image,
+                "qty" => $qty,
+                "price" => $price,
+                "subtotal" => $subtotal
+            ];
+            $total += $subtotal;
+        }
+        $stmt->close();
     }
-    $stmt->close();
-}
 
+    // 保存订单信息到 session
+    $_SESSION['items'] = $items;
+    $_SESSION['total'] = $total;
+
+    // 插入数据库（只执行一次）
+    $paymentType = "TouchNGo";
+    $status = "WAIT_FOR_PAYMENT";
+
+    $stmt = $conn->prepare("
+        INSERT INTO orders (order_id, user_id, total, payment_type, status, created_at) 
+        VALUES (?, ?, ?, ?, ?, NOW())
+    ");
+    $stmt->bind_param("sidss", $order_id, $user_id, $total, $paymentType, $status);
+    $stmt->execute();
+    $stmt->close();
+
+    // ✅ 保存每个商品到 order_items 表
+    foreach ($items as $it) {
+        $itemName = $it['name'];
+        $qty = $it['qty'];
+        $price = $it['price'];
+
+        // 从 game_items 表获取 item_id
+        $stmt = $conn->prepare("SELECT item_id FROM game_items WHERE item_name = ?");
+        $stmt->bind_param("s", $itemName);
+        $stmt->execute();
+        $stmt->bind_result($item_id);
+        if ($stmt->fetch()) {
+            $stmt->close();
+
+            // 插入到 order_items 表
+            $insertItem = $conn->prepare("
+                INSERT INTO order_items (order_id, item_id, quantity, price)
+                VALUES (?, ?, ?, ?)
+            ");
+            $insertItem->bind_param("siid", $order_id, $item_id, $qty, $price);
+            $insertItem->close();
+        } else {
+            $stmt->close();
+        }
+    }
+
+} else {
+    // 如果订单已存在，直接使用 session 数据
+    $order_id = $_SESSION['current_order_id'];
+    $items = $_SESSION['items'];
+    $total = $_SESSION['total'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,8 +227,23 @@ h1 {
 
     <div class="status">Status: Waiting for Payment</div>
 
-    <button class="pay-btn">Confirm Payment</button>
-</div>
+    <!-- 付款按钮 -->
+    <form action="confirm_payment.php" method="POST">
+        <input type="hidden" name="order_id" value="<?= htmlspecialchars($order_id) ?>">
+        <input type="hidden" name="total" value="<?= $total ?>">
+        <input type="hidden" name="action" value="pay">
+        <button type="submit" class="pay-btn">Pay with Touch 'n Go</button>
+    </form>
 
+    <!-- 已付款按钮 -->
+    <form action="confirm_payment.php" method="POST" style="margin-top:20px;">
+        <input type="hidden" name="order_id" value="<?= htmlspecialchars($order_id) ?>">
+        <input type="hidden" name="action" value="confirm">
+        <button type="submit" style="padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:6px; font-size:16px;">
+            ✅ I have paid
+        </button>
+    </form>
+
+</div>
 </body>
 </html>
