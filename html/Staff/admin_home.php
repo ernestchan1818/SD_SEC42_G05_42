@@ -115,11 +115,17 @@ if ($staffId) {
 
             <!-- ✅ View Customer Orders -->
 <div class="card">
-   <img src="../Staff/image/orders.jpg" alt="View Orders">
+   <img src="../Staff/image/order.jpg" alt="View Orders">
    <h3>View Customer Orders</h3>
    <p>Check customer orders, view items, and update delivery status.</p>
-   <a href="view_order.php" class="btn">Go</a>
-</div>
+   <a href="manage_orders.php" class="btn">Go</a>
+</div>       
+
+               <!-- New Card: View Sales Report --><div class="card">
+            <img src="../Staff/image/sales_report.png" alt="View Sales Report"> <!-- 您可能需要创建这张图片 --><h3>View Sales Report</h3>
+            <p>Access detailed sales analytics and revenue reports.</p>
+            <a href="sales_report.php" class="btn">Go</a>
+        </div>
 
 
 

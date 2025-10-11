@@ -109,6 +109,19 @@ if ($staffId) {
                <a href="manage_packages.php" class="btn">Go</a>
             </div>
 
+                       <!-- ✅ View Customer Orders -->
+<div class="card">
+   <img src="../Staff/image/order.jpg" alt="View Orders">
+   <h3>View Customer Orders</h3>
+   <p>Check customer orders, view items, and update delivery status.</p>
+   <a href="manage_orders.php" class="btn">Go</a>
+</div>
+             <!-- New Card: View Sales Report --><div class="card">
+            <img src="../Staff/image/sales_report.jpg" alt="View Sales Report"> <!-- 您可能需要创建这张图片 --><h3>View Sales Report</h3>
+            <p>Access detailed sales analytics and revenue reports.</p>
+            <a href="sales_report.php" class="btn">Go</a>
+        </div>
+
         </div>
     </div>
 </body>

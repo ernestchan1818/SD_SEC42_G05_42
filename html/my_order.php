@@ -134,16 +134,21 @@ h1 {
     gap: 20px; /* 卡片之间的间距 */
 }
 /* 新增：单个订单卡片 */
+.order-card-wrapper {
+    text-decoration: none; /* 移除链接下划线 */
+    color: inherit; /* 继承颜色 */
+}
 .order-card {
     background: #1a1a1a;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     transition: transform 0.2s;
+    cursor: pointer; /* 添加指针以提示可点击 */
 }
 .order-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255,102,0,0.3);
+    box-shadow: 0 8px 20px rgba(255,102,0,0.5); /* 悬停时更明显的高亮 */
 }
 
 /* 订单总结部分 (卡片头部) */
@@ -302,39 +307,43 @@ h1 {
             $statusClass = strtolower(str_replace(' ', '_', $status)); 
             $is_highlighted = (string)$row['order_id'] === $highlight_id ? 'highlight-card' : '';
         ?>
-        <div class="order-card <?= $is_highlighted ?>">
-            
-            <!-- 订单总结 (Order Summary) -->
-            <div class="order-summary">
-                <div class="order-info-group">
-                    <span class="order-id">Order #<?= htmlspecialchars($row['order_id']) ?></span>
-                    <span class="order-date">Date: <?= htmlspecialchars($row['created_at']) ?></span>
+        
+        <!-- 整个卡片现在是可点击的链接 -->
+        <a href="order_status.php?id=<?= $row['order_id'] ?>" class="order-card-wrapper">
+            <div class="order-card <?= $is_highlighted ?>">
+                
+                <!-- 订单总结 (Order Summary) -->
+                <div class="order-summary">
+                    <div class="order-info-group">
+                        <span class="order-id">Order #<?= htmlspecialchars($row['order_id']) ?></span>
+                        <span class="order-date">Date: <?= htmlspecialchars($row['created_at']) ?></span>
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <span class="order-total">RM <?= number_format($row['total'], 2) ?></span>
+                        <span class="status <?= $statusClass ?>"><?= htmlspecialchars($status) ?></span>
+                    </div>
                 </div>
                 
-                <div style="text-align: right;">
-                    <span class="order-total">RM <?= number_format($row['total'], 2) ?></span>
-                    <span class="status <?= $statusClass ?>"><?= htmlspecialchars($status) ?></span>
+                <!-- 商品详情 (Item Details) -->
+                <div class="item-details-box">
+                    <?php if (isset($orderDetails[$row['order_id']]) && !empty($orderDetails[$row['order_id']])): ?>
+                        <?php foreach ($orderDetails[$row['order_id']] as $item): ?>
+                            <div class="item-detail">
+                                <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
+                                <div class="item-info">
+                                    <p><strong><?= htmlspecialchars($item['item_name']) ?></strong></p>
+                                    <p style="color: #ccc;">Qty: <?= $item['quantity'] ?> x RM <?= number_format($item['price'], 2) ?></p>
+                                </div>
+                                <p class="item-price">RM <?= number_format($item['quantity'] * $item['price'], 2) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div style="color: #999; text-align: center;">No item details found for this order.</div>
+                    <?php endif; ?>
                 </div>
             </div>
-            
-            <!-- 商品详情 (Item Details) -->
-            <div class="item-details-box">
-                <?php if (isset($orderDetails[$row['order_id']]) && !empty($orderDetails[$row['order_id']])): ?>
-                    <?php foreach ($orderDetails[$row['order_id']] as $item): ?>
-                        <div class="item-detail">
-                            <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
-                            <div class="item-info">
-                                <p><strong><?= htmlspecialchars($item['item_name']) ?></strong></p>
-                                <p style="color: #ccc;">Qty: <?= $item['quantity'] ?> x RM <?= number_format($item['price'], 2) ?></p>
-                            </div>
-                            <p class="item-price">RM <?= number_format($item['quantity'] * $item['price'], 2) ?></p>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div style="color: #999; text-align: center;">No item details found for this order.</div>
-                <?php endif; ?>
-            </div>
-        </div>
+        </a>
         
         <?php endforeach; ?>
     </div>
