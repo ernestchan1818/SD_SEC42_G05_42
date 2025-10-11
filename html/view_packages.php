@@ -2,13 +2,26 @@
 include "config.php";
 
 // 读取所有套餐
-$packages = $conn->query("SELECT * FROM topup_packages ORDER BY created_at DESC");
+$packages_result = $conn->query("SELECT * FROM topup_packages ORDER BY created_at DESC");
+// Check for query error
+if (!$packages_result) {
+    die("Database Error reading packages: " . $conn->error);
+}
+$packages = [];
+while ($row = $packages_result->fetch_assoc()) {
+    $packages[] = $row;
+}
 
 // 读取 package_items
 $itemsByPackage = [];
-$itemResult = $conn->query("SELECT gi.*, pi.package_id 
-                            FROM game_items gi 
-                            JOIN package_items pi ON gi.item_id = pi.item_id");
+$itemResult = $conn->query("
+    SELECT gi.*, pi.package_id 
+    FROM game_items gi 
+    JOIN package_items pi ON gi.item_id = pi.item_id
+");
+if (!$itemResult) {
+     die("Database Error reading package items: " . $conn->error);
+}
 while ($row = $itemResult->fetch_assoc()) {
     $itemsByPackage[$row['package_id']][] = $row;
 }
@@ -113,7 +126,7 @@ header .logo {
 
 /* 改成纵向列表布局 */
 .package-container { 
-      max-width:900px;
+    max-width:900px;
     margin:30px auto;
     display:flex;
     flex-direction:column;
@@ -122,7 +135,7 @@ header .logo {
 
 /* 单个卡片样式 */
 .package-card { 
-      display:flex; 
+    display:flex; 
     background:#111; 
     border-radius:10px; 
     overflow:hidden; 
@@ -201,11 +214,13 @@ header .logo {
 .modal { 
     display:none; 
     position:fixed; 
-    z-index:1000; 
-    left:0; top:0; 
-    width:100%; height:100%; 
+    top:0; 
+    left:0;
+    width:100%; 
+    height:100%; 
     background: rgba(0,0,0,0.9); 
     overflow:auto; 
+    z-index:1000;
     justify-content:center; 
     align-items:flex-start; 
     padding:30px 0; 
@@ -258,10 +273,13 @@ header .logo {
     background:#ff6600; 
     border:none; 
     color:#fff; 
-    padding:8px 14px; 
-    border-radius:6px; 
+    padding:12px 20px; /* 增加点击区域 */
+    border-radius:8px; /* 圆角更大 */
     cursor:pointer; 
-    margin-top:10px; 
+    margin-top:20px; /* 增加边距 */
+    width: 100%; /* 全宽按钮 */
+    font-size: 16px;
+    font-weight: bold;
     transition: background 0.3s ease; 
 }
 .pay-btn:hover { 
@@ -272,12 +290,12 @@ header .logo {
 .zoom-modal {
     display: none;
     position: fixed;
-    z-index: 2000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.9);
+    z-index: 2000;
     justify-content: center;
     align-items: center;
 }
@@ -295,18 +313,50 @@ header .logo {
     color: #ff6600;
     cursor: pointer;
 }
-.zoom-btn {
-    margin-left: 8px;
-    background: #ff660060;
-    border: none;
-    color: #fff;
-    font-size: 14px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-}
 .zoom-btn:hover {
     background: #f08102d8;
+}
+
+/* Custom Alert Styling */
+.custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.custom-alert-content {
+    background: #1a1a1a;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 350px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,102,0,0.5);
+}
+.custom-alert-content h4 {
+    color: #ff6600;
+    margin-top: 0;
+    font-size: 1.4em;
+}
+.custom-alert-content p {
+    margin: 15px 0;
+    color: #ccc;
+}
+.custom-alert-content button {
+    background: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -323,15 +373,15 @@ header .logo {
         <a href="view_games.php">Top-Up Games</a>
         <a href="view_packages.php">Top-Up Packages</a>
     </nav>
-    
 </header>
+
 <div class="navbar">
     <h1>🎁 Available Packages</h1>
 </div>
 <div class="package-container">
 <?php
-$packages->data_seek(0);
-while($pkg = $packages->fetch_assoc()): ?>
+foreach($packages as $pkg): // Loop 1: Display cards
+?>
     <div class="package-card" onclick="openModal(<?= $pkg['package_id'] ?>)">
         <img src="<?= htmlspecialchars(getImagePath($pkg['image'])) ?>" alt="<?= htmlspecialchars($pkg['package_name']) ?>">
         <div class="package-info">
@@ -340,18 +390,20 @@ while($pkg = $packages->fetch_assoc()): ?>
             <div class="package-discount">Discount: <?= number_format($pkg['discount'],2) ?>%</div>
         </div>
     </div>
-<?php endwhile; ?>
+<?php endforeach; ?>
 </div>
 
 <?php
-$packages->data_seek(0);
-while($pkg = $packages->fetch_assoc()):
+foreach($packages as $pkg): // Loop 2: Display modals
 $pkgId = $pkg['package_id'];
 $items = $itemsByPackage[$pkgId] ?? []; 
 $total = 0;
 foreach($items as $item) { $total += $item['price']; }
 $discount = isset($pkg['discount']) ? $pkg['discount'] : 0;
 $final = $total * (1 - $discount/100);
+
+// 修正：将 $pkgId 作为 game_id 的值传递，确保 orders 表记录正确
+$gameIdForSubmission = $pkgId; 
 ?>
 <div id="modal-<?= $pkgId ?>" class="modal">
     <div class="modal-content">
@@ -379,10 +431,23 @@ $final = $total * (1 - $discount/100);
             <div class="package-discount">Discount: <?= number_format($pkg['discount'],2) ?>%</div>
             <p>Total after discount: <span>RM <?= number_format($final,2) ?></span></p>
         </div>
-        <button class="pay-btn">Pay</button>
+        
+        <!-- ✅ 购买表单：点击 Pay 按钮触发 JS 准备数据 -->
+        <form method="POST" action="save_order.php" onsubmit="return preparePackageOrder(
+            <?= $pkgId ?>, 
+            '<?= addslashes(htmlspecialchars($pkg['package_name'])) ?>', 
+            <?= $final ?>,
+            <?= $gameIdForSubmission ?>
+        )">
+            <input type="hidden" name="game_id" value="<?= $gameIdForSubmission ?>">
+            <!-- 隐藏字段用于传递 JSON 格式的订单数据 -->
+            <input type="hidden" name="order_items" id="order-items-pkg-<?= $pkgId ?>">
+            <button type="submit" class="pay-btn">Purchase Package (RM <?= number_format($final, 2) ?>)</button>
+        </form>
+
     </div>
 </div>
-<?php endwhile; ?>
+<?php endforeach; ?>
 
 <!-- 🔍 图片放大 Modal -->
 <div id="zoomModal" class="zoom-modal">
@@ -402,6 +467,54 @@ function openZoom(src) {
 }
 function closeZoom() {
     document.getElementById("zoomModal").style.display = "none";
+}
+
+// Custom Alert function (替代 alert())
+function showCustomAlert(title, message) {
+    let modal = document.createElement('div');
+    modal.className = 'custom-alert';
+    modal.innerHTML = `
+        <div class="custom-alert-content">
+            <h4>${title}</h4>
+            <p>${message}</p>
+            <button onclick="document.body.removeChild(this.parentNode.parentNode)">OK</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+/**
+ * 准备套餐订单数据，并填充隐藏表单字段
+ * @param {number} pkgId - 套餐ID
+ * @param {string} pkgName - 套餐名称
+ * @param {number} finalPrice - 最终价格
+ * @param {number} gameId - 提交订单时关联的 Game ID (应为 pkgId)
+ * @returns {boolean} - 是否提交表单
+ */
+function preparePackageOrder(pkgId, pkgName, finalPrice, gameId) {
+    // 1. 验证价格
+    if (finalPrice <= 0) {
+        showCustomAlert("Package Error", "The final price is RM0.00. Cannot process a zero-value order.");
+        return false;
+    }
+
+    // 2. 构造 order_items JSON (将整个套餐视为一个 ID 为 -pkgId 的特殊商品)
+    let orderData = {};
+    let uniquePkgItemId = -pkgId; 
+
+    // save_order.php 期望的结构: {item_id: {quantity: x, price: y, name: z}}
+    orderData[uniquePkgItemId] = { 
+        quantity: 1, 
+        price: finalPrice, 
+        name: "Package: " + pkgName 
+    };
+
+    // 3. 填充隐藏字段
+    let hiddenInput = document.getElementById("order-items-pkg-" + pkgId);
+    hiddenInput.value = JSON.stringify(orderData);
+    
+    // 4. 允许表单提交
+    return true;
 }
 </script>
 

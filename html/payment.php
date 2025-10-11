@@ -14,7 +14,8 @@ function getImagePath($path) {
 
 // --- 1. 获取订单 ID 和用户 ID ---
 $order_id = $_GET['order_id'] ?? $_SESSION['current_order_id'] ?? null;
-$user_id = $_SESSION['user_id'] ?? 1; // 假设未登录用户ID为 1 进行测试
+// 优先使用订单创建时的 user_id，作为最可靠的查询条件
+$user_id = $_SESSION['order_creator_id'] ?? $_SESSION['user_id'] ?? 1;
 
 if (empty($user_id) || !is_numeric($user_id)) {
     die("⚠️ Please log in first.");
@@ -24,54 +25,124 @@ if (empty($order_id)) {
     die("❌ No order ID found. Please go back to the top-up page and select items first.");
 }
 
-// --- 2. 从数据库查询该订单的详细信息（包含图片和真实商品名称） ---
-$stmt = $conn->prepare("
-    SELECT 
-        o.total, o.status, g.game_name, 
-        oi.item_name AS order_item_name, oi.quantity, oi.price, /* 保留 order_items 里的名称作为备用 */
-        gi.image,  
-        gi.item_name AS real_item_name /* ✅ 关键修正：从 game_items 获取商品名称 */
+// --- 2. 查询订单主信息 (orders 表) ---
+$stmt_main = $conn->prepare("
+    SELECT o.total, o.status, o.game_id, g.game_name
     FROM orders o
-    JOIN order_items oi ON o.order_id = oi.order_id
     LEFT JOIN games g ON o.game_id = g.game_id
-    LEFT JOIN game_items gi ON oi.item_id = gi.item_id 
     WHERE o.order_id = ? AND o.user_id = ?
 ");
+if (!$stmt_main) die("Order Main Prepare Error: " . $conn->error);
 
-if (!$stmt) die("Database Prepare Error: " . $conn->error);
+$stmt_main->bind_param("ii", $order_id, $user_id);
+$stmt_main->execute();
+$order_data = $stmt_main->get_result()->fetch_assoc();
+$stmt_main->close();
 
-// ⚠️ 关键点：假设 order_id 是 INT 类型，如果你的 order_id 是字符串，请将 "ii" 改为 "si"
-$stmt->bind_param("ii", $order_id, $user_id); 
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    die("❌ Order #{$order_id} not found for this user, or items are missing.");
+if (!$order_data) {
+    die("❌ Order #{$order_id} not found for this user, or items are missing. (Attempted lookup with User ID: {$user_id})");
 }
 
-$items = [];
-$total = 0;
-$status = "Unknown";
-$game_name = "N/A";
+$total = $order_data['total'];
+$status = $order_data['status'];
+$game_name = $order_data['game_name'] ?? "Unknown Game";
+$order_game_id = $order_data['game_id'];
 
-// 遍历结果集，构建订单详情
-while ($row = $result->fetch_assoc()) {
-    $game_name = $row['game_name'] ?? "Unknown Game";
-    $status = $row['status'];
+$items = [];
+$package_summary = null; // 用于存储套餐主信息，方便在顶部显示
+
+// --- 3. 尝试查询订单明细 (order_items) ---
+// 针对购买单品的情况
+$stmt_items = $conn->prepare("
+    SELECT 
+        oi.item_name AS order_item_name, oi.quantity, oi.price, 
+        gi.image, gi.item_name AS real_item_name 
+    FROM order_items oi
+    LEFT JOIN game_items gi ON oi.item_id = gi.item_id 
+    WHERE oi.order_id = ?
+");
+
+if (!$stmt_items) die("Item Detail Prepare Error: " . $conn->error);
+
+$stmt_items->bind_param("i", $order_id);
+$stmt_items->execute();
+$result_items = $stmt_items->get_result();
+
+while ($row = $result_items->fetch_assoc()) {
+    if ($row['order_item_name'] !== null || $row['real_item_name'] !== null) {
+        $subtotal = $row['quantity'] * $row['price'];
+        $display_name = $row['real_item_name'] ?? $row['order_item_name'];
+        
+        $items[] = [
+            "name" => $display_name,
+            "qty" => $row['quantity'],
+            "price" => $row['price'],
+            "subtotal" => $subtotal,
+            "image" => getImagePath($row['image']),
+            "is_package_item" => false // 标记为普通商品
+        ];
+    }
+}
+$stmt_items->close();
+
+
+// --- 4. 如果没有找到 item (购买套餐)，则查询套餐详情及内含商品 ---
+if (empty($items)) {
+    // 1. 查询套餐主信息
+    $pkg_stmt = $conn->prepare("
+        SELECT package_id, package_name, image, discount, price AS list_price
+        FROM topup_packages 
+        WHERE package_id = ?
+    ");
     
-    $subtotal = $row['quantity'] * $row['price'];
-    $total += $subtotal;
-    
-    // ✅ 修复 item name 逻辑：优先使用 game_items 表中的名称
-    $display_name = $row['real_item_name'] ?? $row['order_item_name'];
-    
-    $items[] = [
-        "name" => $display_name,
-        "qty" => $row['quantity'],
-        "price" => $row['price'],
-        "subtotal" => $subtotal,
-        "image" => getImagePath($row['image']) 
-    ];
+    if ($pkg_stmt) {
+        // 使用 orders.game_id 作为 package_id (这是我们的假设)
+        $pkg_stmt->bind_param("i", $order_game_id);
+        $pkg_stmt->execute();
+        $pkg_data = $pkg_stmt->get_result()->fetch_assoc();
+        $pkg_stmt->close();
+        
+        if ($pkg_data) {
+            $package_summary = [
+                "name" => $pkg_data['package_name'],
+                "image" => getImagePath($pkg_data['image']),
+                "discount" => $pkg_data['discount'],
+                "list_price" => $pkg_data['list_price'], 
+                "final_price" => $total 
+            ];
+
+            // 2. 查询套餐内的所有商品明细
+            $items_in_pkg_query = "
+                SELECT 
+                    gi.item_name, 
+                    gi.image, 
+                    gi.price AS unit_price
+                FROM package_items pi
+                JOIN game_items gi ON pi.item_id = gi.item_id
+                WHERE pi.package_id = ?
+            ";
+
+            $pkg_item_stmt = $conn->prepare($items_in_pkg_query);
+            if ($pkg_item_stmt) {
+                $pkg_item_stmt->bind_param("i", $pkg_data['package_id']);
+                $pkg_item_stmt->execute();
+                $pkg_items_result = $pkg_item_stmt->get_result();
+
+                while ($item_row = $pkg_items_result->fetch_assoc()) {
+                    // 3. 添加到 $items 数组作为子项目
+                    $items[] = [
+                        "name" => $item_row['item_name'],
+                        "qty" => 1, 
+                        "price" => $item_row['unit_price'],
+                        "subtotal" => $item_row['unit_price'],
+                        "image" => getImagePath($item_row['image']),
+                        "is_package_item" => true // 标记为套餐内含物
+                    ];
+                }
+                $pkg_item_stmt->close();
+            }
+        }
+    }
 }
 
 $username = $_SESSION['username'] ?? "Demo User";
@@ -128,6 +199,21 @@ h1 {
     background:#222;
     padding:10px;
     border-radius:8px;
+}
+/* 套餐总结样式 */
+.order-item.summary {
+    background: #331100; /* 深橙色背景 */
+    border: 1px solid #ff6600;
+    font-size: 1.1em;
+    padding: 15px 10px;
+    margin-bottom: 5px; /* 靠近子项目 */
+}
+/* 套餐内含项目样式 */
+.order-item.package-item {
+    background: #2a2a2a;
+    border-left: 5px solid #ff6600; /* 橙色边框 */
+    padding-left: 20px;
+    font-size: 0.9em;
 }
 .order-item img {
     width:60px; 
@@ -199,22 +285,49 @@ h1 {
     </div>
 
     <h2>Order Details</h2>
-    <?php if (!empty($items)): ?>
-        <?php foreach($items as $it): ?>
-        <div class="order-item">
-            <!-- ✅ 显示图片和商品名称 -->
+    <?php if (!empty($items) || $package_summary): ?>
+        <?php 
+        // 1. 如果是套餐购买，先显示套餐总结行
+        if ($package_summary): ?>
+            <div class="order-item summary">
+                <img src="<?= htmlspecialchars($package_summary['image']) ?>" alt="<?= htmlspecialchars($package_summary['name']) ?>">
+                <div class="item-details">
+                    <p>
+                        <strong><?= htmlspecialchars($package_summary['name']) ?></strong> 
+                        <span style="color: #ffcc00; margin-left: 10px;">(Package)</span>
+                    </p>
+                    <p style="font-size: 0.9em; color: #ccc;">Original Price: <del>RM <?= number_format($package_summary['list_price'] ?? $total, 2) ?></del></p>
+                    <p style="font-size: 0.9em; color: #00ff99;">Discount: <?= number_format($package_summary['discount'] ?? 0, 2) ?>% Applied</p>
+                </div>
+                <p><strong>RM <?= number_format($package_summary['final_price'] ?? $total, 2) ?></strong></p>
+            </div>
+            <p style="color: #ccc; margin-top: -5px; margin-bottom: 15px; font-size: 0.9em;">Items Contained in Package:</p>
+        <?php endif; ?>
+        
+        <?php 
+        // 2. 循环显示所有商品或套餐内含商品
+        foreach($items as $it): 
+            $is_package_item = $it['is_package_item'] ?? false;
+        ?>
+        <div class="order-item <?= $is_package_item ? 'package-item' : '' ?>">
             <img src="<?= htmlspecialchars($it['image']) ?>" alt="<?= htmlspecialchars($it['name']) ?>">
             <div class="item-details">
                 <p><strong><?= htmlspecialchars($it['name']) ?></strong></p>
-                <p style="font-size: 0.9em; color: #ccc;">Qty: <?= $it['qty'] ?> × RM <?= number_format($it['price'],2) ?></p>
+                <?php if ($is_package_item): ?>
+                    <p style="font-size: 0.9em; color: #ccc;">Contained Item (Individual Price)</p>
+                <?php else: ?>
+                    <p style="font-size: 0.9em; color: #ccc;">Qty: <?= $it['qty'] ?> × RM <?= number_format($it['price'],2) ?></p>
+                <?php endif; ?>
             </div>
-            <p><strong>RM <?= number_format($it['subtotal'],2) ?></strong></p>
+            <!-- 显示单个商品的单价或小计 -->
+            <p><strong>RM <?= number_format($it['price'], 2) ?></strong></p>
         </div>
         <?php endforeach; ?>
-        <div class="total-box">Total: RM <?= number_format($total,2) ?></div>
     <?php else: ?>
-        <p style="text-align: center; color: yellow;">No items found in this order ID.</p>
+        <p style="text-align: center; color: #ff6600;">No item details found for this order.</p>
     <?php endif; ?>
+
+    <div class="total-box">Total: RM <?= number_format($total,2) ?></div>
 
     <div class="payment-method">
         <p><strong>Choose Payment Method:</strong></p>

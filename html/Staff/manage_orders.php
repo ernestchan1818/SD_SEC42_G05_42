@@ -19,8 +19,7 @@ function getImagePath($path) {
 }
 // --- END Helper Function ---
 
-// --- 1. 查询所有订单主信息 ---
-// 注意：这里没有 user_id 限制
+// --- 1. 查询所有订单主信息 (包含 game_id) ---
 // 使用 CASE WHEN 语句将 'DELIVERED' 状态的订单推到列表最后
 $query = "
     SELECT 
@@ -29,6 +28,7 @@ $query = "
         o.status, 
         o.created_at, 
         o.user_id,
+        o.game_id, 
         u.username
     FROM orders o
     LEFT JOIN users u ON o.user_id = u.id
@@ -43,12 +43,17 @@ $result = $conn->query($query);
 
 $orders = [];
 $orderIds = [];
+$gameIdsForPackageCheck = [];
+
 while ($row = $result->fetch_assoc()) {
     $orders[] = $row;
     $orderIds[] = $row['order_id'];
+    if ($row['game_id']) { 
+        $gameIdsForPackageCheck[] = $row['game_id'];
+    }
 }
 
-// --- 2. 批量查询所有订单的商品详情 ---
+// --- 2. 批量查询所有订单的商品详情 (非套餐商品) ---
 $orderDetails = [];
 if (!empty($orderIds)) {
     $idList = implode(',', $orderIds); 
@@ -75,6 +80,52 @@ if (!empty($orderIds)) {
         $orderDetails[$orderId][] = $item_row;
     }
 }
+
+// --- 3. 批量查询套餐详情 (仅查询实际存在的 package_id) ---
+$packageDetails = [];
+if (!empty($gameIdsForPackageCheck)) {
+    $uniquePkgIds = array_unique($gameIdsForPackageCheck); 
+    $pkgIdList = implode(',', $uniquePkgIds);
+    
+    $pkg_query = "
+        SELECT package_id, package_name, image, discount 
+        FROM topup_packages 
+        WHERE package_id IN ($pkgIdList)
+    ";
+    
+    $pkg_res = $conn->query($pkg_query);
+    while ($pkg_row = $pkg_res->fetch_assoc()) {
+        $packageDetails[$pkg_row['package_id']] = $pkg_row;
+    }
+}
+
+// --- 4. 批量查询套餐内含商品详情 (新步骤) ---
+$packageContents = [];
+if (!empty($packageDetails)) {
+    $pkgIdList = implode(',', array_keys($packageDetails)); 
+
+    $content_query = "
+        SELECT 
+            pi.package_id,
+            gi.item_name, 
+            gi.image, 
+            gi.price AS unit_price
+        FROM package_items pi
+        JOIN game_items gi ON pi.item_id = gi.item_id
+        WHERE pi.package_id IN ($pkgIdList)
+    ";
+    
+    $content_res = $conn->query($content_query);
+
+    while ($content_row = $content_res->fetch_assoc()) {
+        $pkgId = $content_row['package_id'];
+        if (!isset($packageContents[$pkgId])) {
+            $packageContents[$pkgId] = [];
+        }
+        $packageContents[$pkgId][] = $content_row;
+    }
+}
+
 
 // 状态选项
 $status_options = [
@@ -218,6 +269,40 @@ h2 {
 .item-info p { margin: 0; font-size: 0.9em; color: #333; }
 .item-price-qty { font-weight: bold; color: #007BFF; }
 
+/* 套餐特定样式 */
+.package-detail {
+    border-left: 5px solid #007BFF;
+    padding: 15px;
+    background: #e9f5ff;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+.package-detail p {
+    margin: 3px 0;
+}
+.package-discount {
+    color: #dc3545; /* 红色表示折扣 */
+    font-weight: bold;
+}
+.package-item-list {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+}
+.pkg-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85em;
+    padding: 5px 0;
+}
+.pkg-item-row img {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+}
+
+
 /* Status Update Form */
 .update-form { 
     display: flex; 
@@ -306,6 +391,9 @@ h2 {
             <?php foreach ($orders as $order): 
                 $status_clean = strtoupper(str_replace(' ', '_', $order['status']));
                 $customer_name = htmlspecialchars($order['username'] ?: "User #{$order['user_id']}");
+                $is_package_order = !isset($orderDetails[$order['order_id']]) && $order['game_id'] > 0;
+                $package_data = $is_package_order ? ($packageDetails[$order['game_id']] ?? null) : null;
+                $package_contents = $is_package_order ? ($packageContents[$order['game_id']] ?? []) : [];
             ?>
             <div class="order-card">
                 <div class="order-summary">
@@ -338,9 +426,41 @@ h2 {
 
                 <!-- Item Details & Status Update -->
                 <div class="item-details-section">
-                    <div class="item-header">Order Items (<?= count($orderDetails[$order['order_id']] ?? []) ?>)</div>
+                    <div class="item-header">Order Items (<?= $is_package_order ? '1 Package' : (count($orderDetails[$order['order_id']] ?? []) . ' Items') ?>)</div>
                     
-                    <?php if (isset($orderDetails[$order['order_id']])): ?>
+                    <?php 
+                    // --- 场景 1: 显示套餐详情 ---
+                    if ($is_package_order && $package_data): ?>
+                        <div class="package-detail">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <img src="<?= htmlspecialchars(getImagePath($package_data['image'])) ?>" alt="<?= htmlspecialchars($package_data['package_name']) ?>" style="width: 60px; height: 60px; border-radius: 4px; margin-right: 15px;">
+                                <div>
+                                    <p style="margin:0;"><strong>Package Name:</strong> <?= htmlspecialchars($package_data['package_name']) ?></p>
+                                    <p style="margin:0; font-size: 0.9em; color: #6c757d;">Package ID: #<?= htmlspecialchars($package_data['package_id']) ?></p>
+                                </div>
+                            </div>
+                            
+                            <p><strong>Total Paid:</strong> RM <?= number_format($order['total'], 2) ?></p>
+                            <p class="package-discount">Discount Applied: <?= number_format($package_data['discount'], 2) ?>%</p>
+                            
+                            <div class="package-item-list">
+                                <p style="font-weight: bold; margin-bottom: 5px;">Contained Items:</p>
+                                <?php if (!empty($package_contents)): ?>
+                                    <?php foreach ($package_contents as $item): ?>
+                                        <div class="pkg-item-row">
+                                            <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
+                                            <div style="flex-grow: 1;">&mdash; <?= htmlspecialchars($item['item_name']) ?></div>
+                                            <span style="color: #6c757d;">(RM <?= number_format($item['unit_price'], 2) ?>)</span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p style="color: #6c757d; font-size: 0.9em;">No items linked to this package.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php
+                    // --- 场景 2: 显示单品详情 ---
+                    elseif (isset($orderDetails[$order['order_id']])): ?>
                         <?php foreach ($orderDetails[$order['order_id']] as $item): ?>
                         <div class="item-detail">
                             <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
@@ -353,6 +473,10 @@ h2 {
                             </div>
                         </div>
                         <?php endforeach; ?>
+                    <?php 
+                    // --- 场景 3: 没有任何详情 ---
+                    else: ?>
+                        <div style="color: #999; text-align: center;">No item details found. (Possibly skipped due to package purchase or old record)</div>
                     <?php endif; ?>
 
                     <!-- Status Update Form -->
