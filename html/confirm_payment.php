@@ -1,105 +1,75 @@
 <?php
-include "config.php";
 session_start();
+include "config.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $order_id = $_POST['order_id'] ?? '';
-    $total = $_POST['total'] ?? 0;
-    $payment_type = $_POST['payment_type'] ?? 'TouchNGo';
-    $user_id = $_SESSION['user_id'] ?? 1;
-    $action = $_POST['action'] ?? ''; // pay 或 confirm
+// --- 1. 获取和验证数据 ---
+// 假设未登录用户 ID 为 1，生产环境中应强制登录
+$user_id = $_SESSION['user_id'] ?? 1; 
+// 优先从 POST 获取 order_id，如果缺失，则从 Session 获取 (以防 POST 丢失)
+$order_id = $_POST['order_id'] ?? $_SESSION['current_order_id'] ?? '';
+$action = $_POST['action'] ?? ''; // 期望是 'confirm'
 
-    if (empty($order_id)) {
-        die("❌ Invalid order ID");
-    }
+// ✅ 修正：强制将 ID 转换为整数，确保与数据库的 INT 类型匹配
+$order_id = (int)$order_id;
+$user_id = (int)$user_id;
 
-    // 检查订单是否存在
-    $check = $conn->prepare("SELECT status FROM orders WHERE order_id=? AND user_id=?");
-    $check->bind_param("si", $order_id, $user_id);
-    $check->execute();
-    $result = $check->get_result();
-
-    if ($result->num_rows > 0) {
-        // 已存在订单 → 根据 action 更新状态
-        if ($action === "pay") {
-            $newStatus = "WAIT_FOR_PAYMENT";
-        } elseif ($action === "confirm") {
-            $newStatus = "COMPLETE_PAYMENT";
-        } else {
-            $newStatus = "UNKNOWN";
-        }
-
-        $update = $conn->prepare("UPDATE orders SET status=? WHERE order_id=? AND user_id=?");
-        $update->bind_param("ssi", $newStatus, $order_id, $user_id);
-        $update->execute();
-        $update->close();
-
-        echo "<p style='color:lime'>✅ Order updated to <b>$newStatus</b></p>";
-
-    } else {
-        // 没有订单则创建新记录（仅作为兜底，正常不会执行）
-        $status = ($action === "confirm") ? "COMPLETE_PAYMENT" : "WAIT_FOR_PAYMENT";
-        $insert = $conn->prepare("
-            INSERT INTO orders (order_id, user_id, total, payment_type, status, created_at)
-            VALUES (?, ?, ?, ?, ?, NOW())
-        ");
-        $insert->bind_param("sidss", $order_id, $user_id, $total, $payment_type, $status);
-        $insert->execute();
-        $insert->close();
-
-        echo "<p style='color:orange'>🟠 New order created with status: $status</p>";
-    }
-
-    $check->close();
+if ($order_id === 0) { // 如果强制转换后为 0，说明 order_id 无效
+    // 订单 ID 缺失，重定向到追踪页面并报错
+    header("Location: my_order.php?error=Missing order ID to confirm payment.");
+    exit;
 }
+
+// 确认付款，设定新状态
+if ($action === "confirm") {
+    $newStatus = "COMPLETE_PAYMENT";
+} else {
+    // 如果没有明确的 'confirm' 动作，默认为等待付款
+    $newStatus = "WAIT_FOR_PAYMENT"; 
+}
+
+// --- 2. 检查订单当前状态并更新 ---
+$check_stmt = $conn->prepare("SELECT status FROM orders WHERE order_id=? AND user_id=?");
+if (!$check_stmt) die("Prepare Error: " . $conn->error);
+
+// 绑定时使用 "ii" (两个整数)
+$check_stmt->bind_param("ii", $order_id, $user_id);
+$check_stmt->execute();
+$result = $check_stmt->get_result();
+$current_order = $result->fetch_assoc();
+$check_stmt->close();
+
+if (!$current_order) {
+    // 找不到订单，可能是用户 ID 不匹配
+    header("Location: my_order.php?error=Order #{$order_id} not found or access denied.&id=" . $order_id);
+    exit;
+}
+
+if ($current_order['status'] === "COMPLETE_PAYMENT") {
+    // 订单已经完成付款，不需要重复更新
+    header("Location: my_order.php?message=Order #{$order_id} already confirmed as paid.&id=" . $order_id);
+    exit;
+}
+
+// --- 3. 执行更新 ---
+$update_stmt = $conn->prepare("UPDATE orders SET status=? WHERE order_id=? AND user_id=?");
+if (!$update_stmt) die("Update Prepare Error: " . $conn->error);
+
+// 绑定时使用 "sii" (字符串，整数，整数)
+$update_stmt->bind_param("sii", $newStatus, $order_id, $user_id); 
+$update_stmt->execute();
+
+if ($update_stmt->affected_rows > 0) {
+    // 更新成功，清除 session 中的当前订单 ID，防止再次加载旧订单
+    unset($_SESSION['current_order_id']); 
+    
+    // 跳转到订单追踪页面并显示成功信息
+    header("Location: my_order.php?message=Payment for order #{$order_id} confirmed successfully!&id=" . $order_id);
+} else {
+    // 更新失败 (如果 update_stmt->affected_rows 为 0，通常是因为 WHERE 条件不匹配)
+    header("Location: my_order.php?error=Update failed. Order #{$order_id} may not exist for this user.&id=" . $order_id);
+}
+
+$update_stmt->close();
+exit;
+
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Touch 'n Go Payment</title>
-<style>
-body { font-family: Arial, sans-serif; background:#000; color:#fff; text-align:center; padding:40px; }
-h1 { color:#ff6600; }
-a.pay-link { display:inline-block; margin-top:20px; padding:15px 25px; background:#ff6600; color:#fff; font-size:18px; font-weight:bold; border-radius:8px; text-decoration:none; }
-a.pay-link:hover { background:#e65c00; }
-button.track-btn {
-    margin-top:30px;
-    background:#28a745;
-    color:#fff;
-    border:none;
-    padding:12px 25px;
-    font-size:16px;
-    border-radius:8px;
-    cursor:pointer;
-}
-button.track-btn:hover { background:#218838; }
-</style>
-</head>
-<body>
-
-<h1>Touch 'n Go Payment</h1>
-<p>Please make your payment to <b>DJS Game Topup Platform System</b></p>
-<p>Order ID: <b><?= htmlspecialchars($order_id) ?></b></p>
-<p>Total: <b>RM <?= number_format($total, 2) ?></b></p>
-
-<!-- ✅ 保留你的 TNG 付款链接 -->
-<a href="https://payment.tngdigital.com.my/sc/bDLoiwKBF4" target="_blank" class="pay-link">
-    Pay with Touch 'n Go
-</a>
-
-<!-- ✅ 点击“我已付款”时更新状态为 COMPLETE_PAYMENT -->
-<form action="confirm_payment.php" method="POST">
-    <input type="hidden" name="order_id" value="<?= htmlspecialchars($order_id) ?>">
-    <input type="hidden" name="action" value="confirm">
-    <button type="submit" class="track-btn">✅ I have paid</button>
-</form>
-
-<!-- 跳转到订单追踪页面 -->
-<form action="my_order.php" method="GET">
-    <button type="submit" class="track-btn" style="background:#ff6600;">📦 Go to Track Order</button>
-</form>
-
-</body>
-</html>
