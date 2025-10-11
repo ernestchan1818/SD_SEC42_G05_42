@@ -35,7 +35,15 @@ $order_data = null; // 确保在作用域内声明
 if ($order_id === 0) {
     $error_message = "Invalid order ID provided. Please go back to the orders list.";
 } else {
-    $stmt = $conn->prepare("SELECT total, status, created_at, game_id, payment_type FROM orders WHERE order_id = ? AND user_id = ?");
+    // ✅ 修正：在 SQL 中明确获取 u.username
+    $stmt = $conn->prepare("
+        SELECT 
+            o.total, o.status, o.created_at, o.game_id, o.payment_type,
+            u.username /* <-- 关键修正：获取用户名 */
+        FROM orders o 
+        LEFT JOIN users u ON o.user_id = u.id 
+        WHERE o.order_id = ? AND o.user_id = ?
+    ");
     
     if (!$stmt) {
         $error_message = "Database Prepare Error: " . $conn->error;
@@ -92,8 +100,6 @@ if ($order_id === 0) {
 
                 // b) 查询套餐内含商品 (Package Contents)
                 if ($package_details) {
-                    // ** 修正：这里是导致 'Commands out of sync' 的潜在原因。
-                    // 确保使用新的 prepare/execute/close 流程。 **
                     $content_query = $conn->prepare("
                         SELECT gi.item_name, gi.image, gi.price AS unit_price
                         FROM package_items pi
@@ -103,11 +109,11 @@ if ($order_id === 0) {
                     if ($content_query) {
                         $content_query->bind_param("i", $order_game_id);
                         $content_query->execute();
-                        $content_result = $content_query->get_result(); // 确保结果集被完全获取
+                        $content_result = $content_query->get_result(); 
                         while ($row = $content_result->fetch_assoc()) {
                             $package_contents[] = $row;
                         }
-                        $content_query->close(); // 确保关闭
+                        $content_query->close(); 
                     }
                 }
             }
@@ -245,6 +251,7 @@ if ($order_id === 0) {
     <div class="info-block">
         <p>Receipt ID: <span>#<?= htmlspecialchars($order_id) ?></span></p>
         <p>Date: <span><?= date("Y-m-d H:i:s", strtotime($order['created_at'])) ?></span></p>
+        <!-- 修正：使用 order_data['username'] -->
         <p>Customer: <span><?= htmlspecialchars($order_data['username'] ?? 'N/A') ?></span></p>
         <p>Payment Method: <span><?= htmlspecialchars($order['payment_type']) ?></span></p>
         <p>Status: <span style="color: <?= $order['status'] === 'DELIVERED' ? '#28a745' : '#ffc107' ?>;"><?= htmlspecialchars($order['status']) ?></span></p>
