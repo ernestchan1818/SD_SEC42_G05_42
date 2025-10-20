@@ -250,14 +250,14 @@ h2 { color:#fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top
     text-align: right;
 }
 /* 套餐样式 */
-.package-summary {
+.package-summary-box {
     background: #442200;
     border: 1px solid #ff6600;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
-.package-summary p {
+.package-summary-box p {
     margin: 5px 0;
 }
 .package-item-row {
@@ -266,6 +266,10 @@ h2 { color:#fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top
     gap: 10px;
     padding: 5px 0;
     border-bottom: 1px dashed #333;
+    font-size: 0.9em;
+}
+.package-item-row:last-child {
+    border-bottom: none;
 }
 .package-item-row img {
     width: 30px;
@@ -394,7 +398,7 @@ h2 { color:#fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top
             <?php 
             // --- 场景 1: 显示套餐详情 ---
             if ($package_details): ?>
-                <div class="package-summary">
+                <div class="package-summary-box">
                     <div style="display: flex; align-items: center; margin-bottom: 15px;">
                         <img src="<?= htmlspecialchars(getImagePath($package_details['image'])) ?>" alt="<?= htmlspecialchars($package_details['package_name']) ?>" style="width: 70px; height: 70px; border-radius: 8px; margin-right: 15px;">
                         <div>

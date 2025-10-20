@@ -49,10 +49,10 @@ $game_name = $order_data['game_name'] ?? "Unknown Game";
 $order_game_id = $order_data['game_id'];
 
 $items = [];
-$package_summary = null; // 用于存储套餐主信息，方便在顶部显示
+$package_summary = null; 
 
 // --- 3. 尝试查询订单明细 (order_items) ---
-// 针对购买单品的情况
+// ... (单品查询逻辑) ...
 $stmt_items = $conn->prepare("
     SELECT 
         oi.item_name AS order_item_name, oi.quantity, oi.price, 
@@ -79,7 +79,7 @@ while ($row = $result_items->fetch_assoc()) {
             "price" => $row['price'],
             "subtotal" => $subtotal,
             "image" => getImagePath($row['image']),
-            "is_package_item" => false // 标记为普通商品
+            "is_package_item" => false 
         ];
     }
 }
@@ -90,13 +90,12 @@ $stmt_items->close();
 if (empty($items)) {
     // 1. 查询套餐主信息
     $pkg_stmt = $conn->prepare("
-        SELECT package_id, package_name, image, discount, price AS list_price
+        SELECT package_name, image, discount, price AS list_price
         FROM topup_packages 
         WHERE package_id = ?
     ");
     
     if ($pkg_stmt) {
-        // 使用 orders.game_id 作为 package_id (这是我们的假设)
         $pkg_stmt->bind_param("i", $order_game_id);
         $pkg_stmt->execute();
         $pkg_data = $pkg_stmt->get_result()->fetch_assoc();
@@ -136,7 +135,7 @@ if (empty($items)) {
                         "price" => $item_row['unit_price'],
                         "subtotal" => $item_row['unit_price'],
                         "image" => getImagePath($item_row['image']),
-                        "is_package_item" => true // 标记为套餐内含物
+                        "is_package_item" => true 
                     ];
                 }
                 $pkg_item_stmt->close();
@@ -146,6 +145,7 @@ if (empty($items)) {
 }
 
 $username = $_SESSION['username'] ?? "Demo User";
+$total_formatted = number_format($total, 2);
 ?>
 
 <!DOCTYPE html>
@@ -233,7 +233,31 @@ h1 {
 }
 .payment-method {
     margin:20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
+.payment-choice {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: #333; /* 修正：恢复深灰背景 */
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+}
+.payment-choice:has(input:checked) {
+    border-color: #ff6600; /* 修正：选中时使用主题橙色边框 */
+    background: #444; /* 修正：选中时的背景稍微变深 */
+}
+.payment-choice input[type="radio"] {
+    margin-right: 15px;
+    transform: scale(1.2);
+    accent-color: #ff6600; /* 修正：使用主题橙色作为选中点颜色 */
+}
+
 .status {
     margin:15px 0;
     font-weight:bold;
@@ -254,17 +278,57 @@ h1 {
     background: rgba(0, 255, 153, 0.1);
 }
 
-.pay-btn {
-    background:#ff6600;
-    border:none;
-    padding:12px 20px;
+.action-buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.payment-submit-btn {
+    padding: 12px 20px;
     font-size:18px;
     border-radius:8px;
     color:white;
     cursor:pointer;
     width:100%;
+    border: none;
+    font-weight: bold;
+    transition: background 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* 增加阴影 */
+    /* ✅ 修正：添加默认橙色背景，避免显示为灰色 */
+    background: #ff6600; 
 }
-.pay-btn:hover { background:#e65c00; }
+
+/* 动态样式控制按钮颜色 */
+.pay-submit-btn.tng-color {
+    background: #ff6600;
+}
+.pay-submit-btn.tng-color:hover {
+    background: #e65c00;
+}
+.pay-submit-btn.fpx-color {
+    background: #007BFF;
+}
+.pay-submit-btn.fpx-color:hover {
+    background: #0056B3;
+}
+
+.confirm-paid-btn {
+    background:#28a745; /* 绿色 */
+    color:#fff;
+    padding:12px 20px; /* 增加内边距 */
+    border-radius:8px;
+    font-size:16px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: background 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* 增加阴影 */
+}
+.confirm-paid-btn:hover {
+    background: #218838;
+}
 </style>
 </head>
 <body>
@@ -329,10 +393,18 @@ h1 {
 
     <div class="total-box">Total: RM <?= number_format($total,2) ?></div>
 
+    <form id="paymentForm" method="GET" action="">
     <div class="payment-method">
         <p><strong>Choose Payment Method:</strong></p>
-        <label><input type="radio" name="payment" value="TouchNGo" checked> Touch 'n Go</label>
-        <label><input type="radio" name="payment" value="FPX"> FPX Bank</label>
+        
+        <label for="radio-tng" class="payment-choice">
+            <input type="radio" id="radio-tng" name="payment_type" value="TouchNGo" checked onchange="updatePaymentButton()"> Touch 'n Go
+        </label>
+        
+        <label for="radio-fpx" class="payment-choice">
+            <input type="radio" id="radio-fpx" name="payment_type" value="FPX" onchange="updatePaymentButton()"> FPX Bank Transfer
+        </label>
+        
     </div>
 
     <!-- ✅ 显示订单状态，并添加样式 -->
@@ -341,20 +413,69 @@ h1 {
         Current Status: **<?= htmlspecialchars($status) ?>**
     </div>
 
-    <!-- 付款按钮 -->
-    <a href="https://payment.tngdigital.com.my/sc/bDLoiwKBF4" target="_blank" class="pay-btn" style="text-decoration: none; display: block; text-align: center;">
-        Pay with Touch 'n Go (RM <?= number_format($total,2) ?>)
-    </a>
+    <!-- 支付按钮区 -->
+    <div class="action-buttons">
+        <input type="hidden" name="order_id" value="<?= htmlspecialchars($order_id) ?>">
+        <input type="hidden" name="total" value="<?= number_format($total, 2, '.', '') ?>">
+        
+        <button type="button" id="paySubmitButton" onclick="submitPayment()" class="payment-submit-btn pay-tng">
+            Pay Now (RM <?= $total_formatted ?>)
+        </button>
+    </div>
+    </form> 
 
-    <!-- 已付款按钮 (提交给 confirm_payment.php) -->
-    <form action="confirm_payment.php" method="POST" style="margin-top:20px;">
+    <!-- ✅ 独立的确认付款表单（防止嵌套） -->
+    <form action="confirm_payment.php" method="POST" style="margin-top: 20px; text-align: center;">
         <input type="hidden" name="order_id" value="<?= htmlspecialchars($order_id) ?>">
         <input type="hidden" name="action" value="confirm">
-        <button type="submit" style="padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:6px; font-size:16px; width: 100%; cursor: pointer;">
+        <button type="submit" class="confirm-paid-btn">
             ✅ I have paid, Confirm Order
         </button>
     </form>
-
 </div>
+
+<script>
+    // 初始化时调用一次
+    document.addEventListener('DOMContentLoaded', updatePaymentButton);
+
+    function updatePaymentButton() {
+        const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+        const button = document.getElementById('paySubmitButton');
+        const totalInput = document.getElementById('paymentForm').querySelector('input[name="total"]');
+        const totalAmount = totalInput ? totalInput.value : '0.00';
+
+
+        // 清除所有颜色类
+        button.classList.remove('tng-color', 'fpx-color');
+        
+        if (paymentType === 'TouchNGo') {
+            button.classList.add('tng-color');
+            button.innerText = `Pay with Touch 'n Go (RM ${totalAmount})`;
+        } else if (paymentType === 'FPX') {
+            button.classList.add('fpx-color');
+            button.innerText = `Pay with FPX Bank (RM ${totalAmount})`;
+        }
+    }
+
+    function submitPayment() {
+        const form = document.getElementById('paymentForm');
+        const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+
+        if (paymentType === 'TouchNGo') {
+            // Touch 'n Go (固定链接，直接在新标签页跳转)
+            window.open("https://payment.tngdigital.com.my/sc/bDLoiwKBF4", '_blank');
+        } else if (paymentType === 'FPX') {
+            // FPX (提交给 process_fpx_payment.php 脚本，并在新标签页打开)
+            
+            // 构造 URL
+            const orderId = form.querySelector('input[name="order_id"]').value;
+            const total = form.querySelector('input[name="total"]').value;
+            
+            const url = `process_fpx_payment.php?order_id=${orderId}&total=${total}`;
+            window.open(url, '_blank');
+        }
+    }
+</script>
+
 </body>
 </html>
