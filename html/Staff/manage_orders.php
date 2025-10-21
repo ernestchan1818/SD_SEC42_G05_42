@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "config.php";
+include "config.php"; // 确保 $conn 是 mysqli 连接
 
 // ⚠️ 实际应用中：在这里添加员工权限检查
 $is_staff = true; // 假设用户已通过员工验证
@@ -151,44 +151,42 @@ $error = $_GET['error'] ?? '';
 /* --- Blue/White Palette --- */
 body { 
     font-family: 'Inter', sans-serif; 
-    background: #F4F7F9; /* 浅灰色背景 */
-    color: #333; /* 深色文本 */
+    background: #FFFFFF; /* 修正：白色背景 */
+    color: #e8ecf1; /* 确保：亮色文本 */
     margin: 0; 
     padding: 0; 
 }
 /* 头部主标题 */
 header { 
     background: #007BFF; /* 蓝色头部背景 */
-    padding: 15px 20px; 
+    padding: 15px 30px;
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
-header h1 { 
-    margin: 0; 
-    font-size: 24px; 
-    color: #fff; /* 白色标题 */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
 }
 /* 导航栏样式 */
-.navbar { 
-    background: #111; /* 深色背景 */
-    padding: 10px 20px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+nav {
     display: flex;
-    justify-content: center;
+    gap: 15px;
 }
-.navbar nav a {
+nav a {
     color: #fff;
     text-decoration: none;
-    padding: 8px 15px;
-    margin: 0 5px;
+    padding: 5px 10px;
     border-radius: 4px;
     transition: background 0.3s;
-    font-size: 0.95em;
     font-weight: 500;
 }
-.navbar nav a:hover {
+nav a:hover {
     background: #0056B3; /* 深蓝色悬停 */
 }
 
@@ -198,7 +196,7 @@ header h1 {
     padding: 20px; 
 }
 h2 { 
-    color: #007BFF; /* 蓝色标题 */
+    color: #00BFFF; /* 亮蓝色标题 */
     border-bottom: 2px solid #007BFF; 
     padding-bottom: 10px; 
     margin-bottom: 30px; 
@@ -215,20 +213,21 @@ h2 {
 
 /* Order Card Styling */
 .order-card { 
-    background: #FFFFFF; /* 白色卡片背景 */
+    background: #1a2a40; /* 修正：深蓝卡片背景 */
     border-radius: 12px; 
     margin-bottom: 25px; 
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+    /* ✅ 修正：更强的蓝色阴影 */
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.4); 
     transition: transform 0.3s, box-shadow 0.3s;
 }
 .order-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2); /* 蓝色高亮阴影 */
+    transform: translateY(-5px); /* 悬停浮动更多 */
+    box-shadow: 0 15px 35px rgba(0, 191, 255, 0.6); /* 悬停时更亮 */
 }
 
 .order-summary { 
     padding: 20px; 
-    border-bottom: 1px solid #E0E0E0; /* 浅灰色分割线 */
+    border-bottom: 1px solid #374151; /* 深色分割线 */
     display: flex; 
     flex-wrap: wrap; 
     justify-content: space-between; 
@@ -236,12 +235,12 @@ h2 {
 }
 .summary-item { margin-bottom: 10px; }
 .summary-item strong { 
-    color: #007BFF; /* 蓝色标签 */
+    color: #00BFFF; /* 亮蓝色标签 */
     display: block; 
     font-size: 0.8em; 
     margin-bottom: 2px; 
 }
-.summary-item span { font-size: 1.1em; color: #333; }
+.summary-item span { font-size: 1.1em; color: #e8ecf1; }
 
 .status-display { 
     padding: 5px 12px; 
@@ -258,22 +257,22 @@ h2 {
 /* Item Details */
 .item-details-section { 
     padding: 20px; 
-    background: #F8F9FA; /* 极浅灰色商品背景 */
+    background: #111827; /* 极深色商品背景 */
     border-radius: 0 0 12px 12px;
 }
-.item-header { font-size: 1em; font-weight: bold; color: #6C757D; margin-bottom: 10px; }
-.item-detail { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #E0E0E0; }
+.item-header { font-size: 1em; font-weight: bold; color: #9ca3af; margin-bottom: 10px; }
+.item-detail { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #1f2937; }
 .item-detail:last-child { border-bottom: none; }
-.item-detail img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 15px; border: 1px solid #ccc;}
+.item-detail img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 15px; border: 1px solid #374151;}
 .item-info { flex-grow: 1; }
-.item-info p { margin: 0; font-size: 0.9em; color: #333; }
-.item-price-qty { font-weight: bold; color: #007BFF; }
+.item-info p { margin: 0; font-size: 0.9em; color: #e8ecf1; }
+.item-price-qty { font-weight: bold; color: #00BFFF; }
 
 /* 套餐特定样式 */
 .package-detail {
-    border-left: 5px solid #007BFF;
+    border-left: 5px solid #00BFFF;
     padding: 15px;
-    background: #e9f5ff;
+    background: #142236;
     margin-bottom: 10px;
     border-radius: 4px;
 }
@@ -281,13 +280,13 @@ h2 {
     margin: 3px 0;
 }
 .package-discount {
-    color: #dc3545; /* 红色表示折扣 */
+    color: #ef4444; /* 红色表示折扣 */
     font-weight: bold;
 }
 .package-item-list {
     margin-top: 15px;
     padding-top: 10px;
-    border-top: 1px dashed #ccc;
+    border-top: 1px dashed #374151;
 }
 .pkg-item-row {
     display: flex;
@@ -310,20 +309,20 @@ h2 {
     gap: 15px; 
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #E0E0E0;
+    border-top: 1px solid #374151;
 }
 .update-form select { 
     padding: 8px 12px; 
     border-radius: 6px; 
-    background: #fff; 
-    color: #333; 
-    border: 1px solid #CED4DA;
+    background: #111827; 
+    color: #fff; 
+    border: 1px solid #374151;
     transition: border-color 0.3s;
 }
 .update-form select:focus {
-    border-color: #007BFF;
+    border-color: #00BFFF;
     outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.25);
 }
 .update-form button { 
     background: #007BFF; /* 蓝色按钮 */
@@ -347,24 +346,17 @@ h2 {
 <body>
 
 <header>
-    <h1>Staff Portal: Orders</h1>
-</header>
-<!-- 新增的导航栏 -->
-<div class="navbar">
+    <div class="logo">🎮 DJS Game</div>
     <nav>
-    <?php
-    // 假设您在登录时设置了 $_SESSION['role']
-    if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'admin') {
-            echo '<a href="admin_home.php">Home</a>';
-        } elseif ($_SESSION['role'] === 'staff') {
-            echo '<a href="staff_home.php">Home</a>';
+        <?php
+        if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] === 'admin') {
+                echo '<a href="admin_home.php">Home</a>';
+            } elseif ($_SESSION['role'] === 'staff') {
+                echo '<a href="staff_home.php">Home</a>';
+            } 
         } 
-    } else {
-        // 如果未设置角色，默认显示 Staff Home
-        echo '<a href="staff_home.php">Home</a>';
-    }
-    ?>
+        ?>
         <a href="sales_report.php">Sales Report</a>
         <a href="Contact.php">Contact</a>
         <a href="contactus.php">Feedback</a>
@@ -372,8 +364,7 @@ h2 {
         <a href="manage_packages.php">Top-Up Packages</a>
         <a href="signout.php">Sign Out</a>
     </nav>
-</div>
-<!-- 导航栏结束 -->
+</header>
 
 <div class="container">
     <h2>Manage Customer Orders</h2>
@@ -385,7 +376,7 @@ h2 {
     <?php endif; ?>
 
     <?php if (empty($orders)): ?>
-        <p style="text-align: center; color: #6c757d;">No customer orders found.</p>
+        <p style="text-align: center; color: #9ca3af;">No customer orders found.</p>
     <?php else: ?>
         <div class="order-list">
             <?php foreach ($orders as $order): 
@@ -436,7 +427,7 @@ h2 {
                                 <img src="<?= htmlspecialchars(getImagePath($package_data['image'])) ?>" alt="<?= htmlspecialchars($package_data['package_name']) ?>" style="width: 60px; height: 60px; border-radius: 4px; margin-right: 15px;">
                                 <div>
                                     <p style="margin:0;"><strong>Package Name:</strong> <?= htmlspecialchars($package_data['package_name']) ?></p>
-                                    <p style="margin:0; font-size: 0.9em; color: #6c757d;">Package ID: #<?= htmlspecialchars($package_data['package_id']) ?></p>
+                                    <p style="margin:0; font-size: 0.9em; color: #9ca3af;">Package ID: #<?= htmlspecialchars($package_data['package_id']) ?></p>
                                 </div>
                             </div>
                             
@@ -450,11 +441,11 @@ h2 {
                                         <div class="pkg-item-row">
                                             <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
                                             <div style="flex-grow: 1;">&mdash; <?= htmlspecialchars($item['item_name']) ?></div>
-                                            <span style="color: #6c757d;">(RM <?= number_format($item['unit_price'], 2) ?>)</span>
+                                            <span style="color: #9ca3af;">(RM <?= number_format($item['unit_price'], 2) ?>)</span>
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <p style="color: #6c757d; font-size: 0.9em;">No items linked to this package.</p>
+                                    <p style="color: #9ca3af; font-size: 0.9em;">No items linked to this package.</p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -466,7 +457,7 @@ h2 {
                             <img src="<?= htmlspecialchars(getImagePath($item['image'])) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>">
                             <div class="item-info">
                                 <p><strong><?= htmlspecialchars($item['item_name']) ?></strong></p>
-                                <p style="color: #6c757d;">Price: RM <?= number_format($item['price'], 2) ?></p>
+                                <p style="color: #9ca3af;">Price: RM <?= number_format($item['price'], 2) ?></p>
                             </div>
                             <div class="item-price-qty">
                                 Qty: <?= $item['quantity'] ?>

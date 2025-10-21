@@ -118,44 +118,203 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
     <meta charset="UTF-8">
     <title>Your Profile - Staff/Admin</title>
     <style>
-        body{font-family:system-ui,Arial,sans-serif;background:#0b0f17;color:#e8ecf1;margin:0}
-        header,footer{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#111827}
-        nav a{color:#cbd5e1;margin-right:14px;text-decoration:none}
-        .wrap{max-width:720px;margin:40px auto;padding:24px;background:#111827;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-        .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1f2937}
-        .row:last-child{border-bottom:none}
-        .label{color:#9ca3af}
-        .value{font-weight:600}
-        .badge{padding:2px 8px;border-radius:999px;font-size:12px}
-        .ok{background:#10b98133;color:#10b981}
-        .no{background:#ef444433;color:#ef4444}
-        .btn{display:inline-block;margin-top:10px;padding:10px 16px;border-radius:10px;background:#2563eb;color:#fff;text-decoration:none;border:none;cursor:pointer}
-        .btn.out{background:#ef4444}
-        form{margin-top:20px}
-        input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#fff}
-        .msg{margin-top:10px;padding:10px;border-radius:8px}
-        .success{background:#10b98133;color:#10b981}
-        .error{background:#ef444433;color:#ef4444}
-        img.avatar{border-radius:50%;width:120px;height:120px;object-fit:cover}
+        /* --- General Styles --- */
+        body { 
+            font-family: 'Inter', system-ui, Arial, sans-serif;
+            background: #0d1a2f; /* 深蓝背景 (科技感) */
+            color: #e8ecf1; 
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* --- Header/Navigation --- */
+        header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #007BFF; /* 蓝色头部背景 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        nav a {
+            color: #fff;
+            margin-right: 15px;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background: #0056B3; /* 深蓝色悬停 */
+        }
+        
+        /* --- Wrapper/Card --- */
+        .wrap {
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #1a2a40; /* 略浅的深蓝卡片背景 */
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3); /* 蓝色发光阴影 */
+            flex-grow: 1;
+        }
+
+        h2, h3 {
+            color: #00BFFF; /* 亮蓝色标题 */
+            border-bottom: 2px solid #00BFFF;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 1.3em;
+            margin-top: 30px;
+        }
+
+        /* --- Profile Rows --- */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f2937;
+        }
+        .row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            color: #b0e0ff; /* 浅蓝色标签 */
+        }
+        .value {
+            font-weight: 600;
+            color: #e8ecf1;
+        }
+        
+        /* --- Avatars and Forms --- */
+        img.avatar {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid #00BFFF; /* 蓝色边框 */
+        }
+        
+        form {
+            margin-top: 20px;
+            background: #111827; /* 表单区背景 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 123, 255, 0.1);
+        }
+        
+        input[type="text"], input[type="email"], input[type="password"], input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #1f2937;
+            color: #fff;
+            box-sizing: content-box; /* 修复文件输入框的宽度问题 */
+        }
+        input:focus {
+            border-color: #00BFFF;
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
+            outline: none;
+        }
+        
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: #00BFFF; /* 亮蓝色主按钮 */
+            color: #111827;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #0099CC;
+        }
+        .btn.out {
+            background: #ef4444; /* 退出按钮红色 */
+            color: #fff;
+        }
+        .btn.out:hover {
+            background: #dc2626;
+        }
+        
+        /* --- Messages and Badges --- */
+        .msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid;
+        }
+        .success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .ok {
+            background: #10b98133;
+            color: #10b981;
+        }
+        .no {
+            background: #ef444433;
+            color: #ef4444;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: auto;
+            background: #111827;
+            text-align: center;
+            padding: 15px;
+            color: #6b7280;
+            border-top: 1px solid #1f2937;
+        }
     </style>
 </head>
 <body>
 <header>
     <div class="logo">🎮 DJS Game</div>
     <nav>
-           <?php
-    if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'admin') {
-            echo '<a href="admin_home.php">Home</a>';
-        } elseif ($_SESSION['role'] === 'staff') {
-            echo '<a href="staff_home.php">Home</a>';
+        <?php
+        if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] === 'admin') {
+                echo '<a href="admin_home.php">Home</a>';
+            } elseif ($_SESSION['role'] === 'staff') {
+                echo '<a href="staff_home.php">Home</a>';
+            } else {
+                echo '<a href="signinS.php">Home</a>'; // fallback
+            }
         } else {
-            echo '<a href="signinS.php">Home</a>'; // fallback
+            echo '<a href="signinS.php">Home</a>'; // 未登录
         }
-    } else {
-        echo '<a href="signinS.php">Home</a>'; // 未登录
-    }
-    ?>
+        ?>
         <a href="profileS.php">Profile</a>
         <a href="logoutS.php">Logout</a>
     </nav>
@@ -166,11 +325,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload_avatar"])) {
 
     <!-- 显示头像 -->
     <div style="text-align:center;margin-bottom:20px;">
-        <?php if (!empty($user['avatar'])): ?>
-            <img src="<?php echo htmlspecialchars($user['avatar']); ?>" class="avatar" alt="Avatar">
-        <?php else: ?>
-            <img src="default.png" class="avatar" alt="Default Avatar">
-        <?php endif; ?>
+        <?php 
+        $avatar_src = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'default.png';
+        ?>
+        <img src="<?php echo $avatar_src; ?>" class="avatar" alt="Avatar">
     </div>
 
     <!-- 上传头像 -->

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "config.php"; 
+include "config.php"; // 确保包含数据库配置
 
 // 权限限制
 if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'staff'])) {
@@ -131,9 +131,14 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
     <meta charset="UTF-8">
     <title>Manage Games & Items</title>
     <style>
-        body { font-family: Arial, sans-serif; background:#f0f8ff; color:#333; margin:0; }
-        .navbar { background:#007bff; padding:12px; }
-        .navbar a { color:#fff; text-decoration:none; margin-right:20px; font-weight:600; }
+        /* --- Base Styles (Keeping original structure for table/forms) --- */
+        body { 
+            font-family: Arial, sans-serif; 
+            background:#f0f8ff; 
+            color:#333; 
+            margin:0; 
+            padding:0; 
+        }
         .container { width:95%; margin:auto; padding:20px; }
         .card { background:#ffffff; padding:15px; margin:15px 0; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.2);}
         h2 { color:#007bff; }
@@ -142,33 +147,65 @@ $games = $conn->query("SELECT * FROM games ORDER BY created_at DESC");
         table { width:100%; border-collapse:collapse; margin-top:15px; }
         th, td { border:1px solid #ccc; padding:8px; text-align:center; }
         th { background:#007bff; color:#fff; }
+        tr:hover td { background:#fafafa; }
         img { max-width:80px; }
         .msg { background:#17a2b8; padding:8px; margin-bottom:15px; border-radius:5px; color:#fff; }
-        .nav { width:90%; max-width:1100px; margin:0 auto 12px; display:flex; gap:12px; align-items:center; }
-.nav a { text-decoration:none; background:#2c3e50; color:#fff; padding:8px 12px; border-radius:6px; }
-.nav a.logout { margin-left:auto; background:#c0392b; }
+        
+        /* --- Navigation Bar (Unified Blue/White Theme) --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #007BFF; /* 蓝色头部背景 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        nav a:hover {
+            background: #0056B3; /* 深蓝色悬停 */
+        }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-     <nav>
-    <?php
-    if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'admin') {
-            echo '<a href="admin_home.php">Home</a>';
-        } elseif ($_SESSION['role'] === 'staff') {
-            echo '<a href="staff_home.php">Home</a>';
+<header>
+    <div class="logo">🎮 DJS Game</div>
+    <nav>
+        <?php
+        if (isset($_SESSION['role'])) {
+            if ($_SESSION['role'] === 'admin') {
+                echo '<a href="admin_home.php">Home</a>';
+            } elseif ($_SESSION['role'] === 'staff') {
+                echo '<a href="staff_home.php">Home</a>';
+            } 
         } 
-    } 
-    ?>
-            <a href="Contact.php">Contact</a>
-            <a href="contactus.php">Feedback</a>
-            <a href="manage_games.php">Top-Up Games</a>
-            <a href="manage_packages.php">Top-Up Packages</a>
-            <a href="signout.php">Sign Out</a>
-        </nav>
-</div>
+        ?>
+        <a href="Contact.php">Contact</a>
+        <a href="contactus.php">Feedback</a>
+        <a href="manage_games.php">Top-Up Games</a>
+        <a href="manage_packages.php">Top-Up Packages</a>
+        <a href="logoutS.php">Sign Out</a>
+    </nav>
+</header>
 
 <div class="container">
     <h2>🎮 Manage Game Categories & Items</h2>

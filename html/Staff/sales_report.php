@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "config.php";
+include "config.php"; // 确保 $conn 是 mysqli 连接
 
 // ⚠️ 实际应用中：在这里添加员工权限检查
 $is_staff = true; // 假设用户已通过员工验证
@@ -63,41 +63,44 @@ $top_items = $top_items_result->fetch_all(MYSQLI_ASSOC);
 /* --- Blue/White Palette --- */
 body { 
     font-family: 'Inter', sans-serif; 
-    background: #F4F7F9; 
-    color: #333; 
+    background: #FFFFFF; /* 修正：白色背景 */
+    color: #333; /* 字体颜色为深色 */
     margin: 0; 
     padding: 0; 
 }
+/* 头部主标题 */
 header { 
-    background: #007BFF; 
-    padding: 15px 20px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background: #007BFF; /* 蓝色头部背景 */
+    padding: 15px 30px; /* 调整 padding */
+    display: flex; 
+    justify-content: space-between; /* 调整布局 */
+    align-items: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 header h1 { 
     margin: 0; 
     font-size: 24px; 
-    color: #fff; 
-    text-align: center;
+    color: #fff; /* 白色标题 */
+    text-align: left;
 }
-.navbar { 
-    background: #111; 
-    padding: 10px 20px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+/* 导航栏样式 */
+nav {
     display: flex;
-    justify-content: center;
+    gap: 15px;
 }
-.navbar nav a {
+nav a {
     color: #fff;
     text-decoration: none;
-    padding: 8px 15px;
-    margin: 0 5px;
+    padding: 5px 10px;
     border-radius: 4px;
     transition: background 0.3s;
-    font-size: 0.95em;
     font-weight: 500;
 }
-.navbar nav a:hover {
-    background: #0056B3;
+nav a:hover {
+    background: #0056B3; /* 深蓝色悬停 */
 }
 
 .container { 
@@ -106,7 +109,7 @@ header h1 {
     padding: 20px; 
 }
 h2 { 
-    color: #007BFF; 
+    color: #007BFF; /* 蓝色标题 */
     border-bottom: 2px solid #007BFF; 
     padding-bottom: 10px; 
     margin-bottom: 30px; 
@@ -122,7 +125,12 @@ h2 {
     background: #FFFFFF;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* 修正：深蓝色阴影 */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); 
+    transition: transform 0.2s;
+}
+.summary-card:hover {
+    transform: translateY(-5px);
 }
 .summary-card h3 {
     margin: 0 0 10px;
@@ -149,7 +157,8 @@ table {
     background: #FFFFFF;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* 修正：深蓝色阴影 */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); 
     margin-bottom: 40px;
 }
 th, td {
@@ -166,6 +175,9 @@ th {
 tr:nth-child(even) {
     background-color: #F8F9FA;
 }
+tr:hover {
+    background-color: #e9f5ff; /* 浅蓝色悬停 */
+}
 .revenue-column {
     font-weight: bold;
     color: #28A745;
@@ -175,9 +187,7 @@ tr:nth-child(even) {
 <body>
 
 <header>
-    <h1>Staff Portal</h1>
-</header>
-<div class="navbar">
+    <h1>Staff Portal: Sales Report</h1>
     <nav>
     <?php
     if (isset($_SESSION['role'])) {
@@ -198,7 +208,7 @@ tr:nth-child(even) {
         <a href="manage_packages.php">Top-Up Packages</a>
         <a href="signout.php">Sign Out</a>
     </nav>
-</div>
+</header>
 
 <div class="container">
     <h2>Sales Report & Analytics</h2>
