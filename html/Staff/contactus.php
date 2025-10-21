@@ -190,7 +190,7 @@ table td:nth-child(4) {
         <a href="contactus.php">User Messages</a>
         <a href="manage_games.php">Top-Up Games</a>
         <a href="manage_packages.php">Top-Up Packages</a>
-        <a href="logout.php">Logout</a>
+        <a href="logoutS.php">Logout</a>
     </nav>
 </header>
 

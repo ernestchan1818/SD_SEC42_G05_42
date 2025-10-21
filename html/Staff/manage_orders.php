@@ -362,7 +362,7 @@ h2 {
         <a href="contactus.php">Feedback</a>
         <a href="manage_games.php">Top-Up Games</a>
         <a href="manage_packages.php">Top-Up Packages</a>
-        <a href="signout.php">Sign Out</a>
+        <a href="logoutS.php">Sign Out</a>
     </nav>
 </header>
 
