@@ -1,7 +1,7 @@
 # 🎮 DJS Game Top-Up Platform  
 
 <p align="center">
-  <img height="180" width="600" alt="utm-space-logo" src="https://github.com/user-attachments/assets/35a472ee-6a67-4dc5-9ce6-4d0d3f578dac" />
+  <img height="180" width="400" alt="utm-space-logo" src="https://github.com/user-attachments/assets/35a472ee-6a67-4dc5-9ce6-4d0d3f578dac" />
   <img height="180" width="250" alt="djs-game-topup" src="https://github.com/user-attachments/assets/f37ea758-6a49-4db4-aa4f-06a09ad9941a" />
 </p>
 
