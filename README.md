@@ -55,23 +55,3 @@ Universiti Teknologi Malaysia (UTM)
 
 
 ![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-![Hertaaa](https://tenor.com/uec8LNfGXI8.gif)
-
-
-
