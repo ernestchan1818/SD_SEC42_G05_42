@@ -15,11 +15,41 @@ The **DJS Game Top-Up Platform** is a web-based system that allows users to purc
 ---
 
 ## ⚙️ Installation Manual  
-1. Download Xampp
-2. Install all files in this github
-3. Place the extracted folder in htdocs
-4. Turn on Apache and MySQL
-5. Go to localhost/"Your folder name"
+
+## Installation
+To run this program, you need to install these things:
+
+> XAMPP
+
+##Install XAMPP
+Download the Windows Installer from <a href="https://www.apachefriends.org/download.html"> XAMPP Official Website. </a>
+<img width="1246" height="713" alt="Screenshot 2025-10-24 182351" src="https://github.com/user-attachments/assets/b82fd9ff-1dae-49b8-85e0-5a8b0722fbf9" />
+
+##Run Locally
+First, you need to clone this github repositories to **htdocs** folder inside xampp.
+<img width="1661" height="978" alt="Screenshot 2025-10-24 182511" src="https://github.com/user-attachments/assets/5567c11c-c9e9-4cad-8b07-7449177597e4" />
+
+Then, run XAMPP Control Panel and start **Apache** and **MySQL**
+<img width="828" height="541" alt="Screenshot 2025-10-24 182647" src="https://github.com/user-attachments/assets/162c95af-5880-40e1-9ddf-59f575b129c2" />
+
+## Import Database
+You can access the database through **Admin** button on XAMPP Control Panel.
+<img width="1913" height="872" alt="image" src="https://github.com/user-attachments/assets/54ea232a-617a-4468-a900-67c4a45401c5" />
+
+Click on the **New** button on PhpMyAdmin Page to create database
+<img width="1919" height="884" alt="image" src="https://github.com/user-attachments/assets/fb938505-e274-43bc-ad43-abbe37b8777e" />
+
+Name the database **u827939212_otpdb** and click **Create** button
+<img width="1919" height="860" alt="image" src="https://github.com/user-attachments/assets/bd2a910b-f7d8-4103-b6bc-0d0005e74d6d" />
+
+Click on **Import** button, then Click **Choose File** button and select the database then scroll down and click the **Import** button import the database
+<img width="1486" height="609" alt="image" src="https://github.com/user-attachments/assets/8f31d465-8311-4020-8bfa-0f8a00befe45" />
+<img width="1902" height="874" alt="Screenshot 2025-10-24 184446" src="https://github.com/user-attachments/assets/1ac761af-b7af-4669-904d-c65b7b66e4fd" />
+
+
+
+
+
 ---
 
 ## 🌐 Hosting Website  
