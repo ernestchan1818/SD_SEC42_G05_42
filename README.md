@@ -52,7 +52,7 @@ Diploma in Computer Science
 Universiti Teknologi Malaysia (UTM)  
 
 ---
-<div class="tenor-gif-embed" data-postid="16840785778058996716" data-share-method="host" data-aspect-ratio="0.939759" data-width="100%"><a href="https://tenor.com/view/kuru-kuru-kururing-herta-honkai-star-rail-mentally-down-gif-16840785778058996716">Kuru Kuru Kururing GIF</a>from <a href="https://tenor.com/search/kuru+kuru-gifs">Kuru Kuru GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+(https://tenor.com/uec8LNfGXI8.gif)
 
 ![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
 
