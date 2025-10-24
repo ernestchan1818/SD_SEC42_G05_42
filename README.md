@@ -15,8 +15,11 @@ The **DJS Game Top-Up Platform** is a web-based system that allows users to purc
 ---
 
 ## ⚙️ Installation Manual  
-
-
+1. Download Xampp
+2. Install all files in this github
+3. Place the extracted folder in htdocs
+4. Turn on Apache and MySQL
+5. Go to localhost/"Your folder name"
 ---
 
 ## 🌐 Hosting Website  
@@ -49,6 +52,7 @@ Diploma in Computer Science
 Universiti Teknologi Malaysia (UTM)  
 
 ---
+<div class="tenor-gif-embed" data-postid="16840785778058996716" data-share-method="host" data-aspect-ratio="0.939759" data-width="100%"><a href="https://tenor.com/view/kuru-kuru-kururing-herta-honkai-star-rail-mentally-down-gif-16840785778058996716">Kuru Kuru Kururing GIF</a>from <a href="https://tenor.com/search/kuru+kuru-gifs">Kuru Kuru GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
 ![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
 
