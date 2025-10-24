@@ -30,7 +30,7 @@ The **DJS Game Top-Up Platform** is a web-based system that allows users to purc
 |----------|-----------------------------------|--------------|
 | Admin    | ``   | ``    |
 | Staff    | `songchao.yang@graduate.utm.my`   |   `12345`    |
-| Customer | ``| `` |
+| Customer | `jesvin@graduate.utm.my	`        | `` |
 
 ---
 
