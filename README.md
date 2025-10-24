@@ -46,8 +46,7 @@ Click on **Import** button, then Click **Choose File** button and select the dat
 <img width="1486" height="609" alt="image" src="https://github.com/user-attachments/assets/8f31d465-8311-4020-8bfa-0f8a00befe45" />
 <img width="1902" height="874" alt="Screenshot 2025-10-24 184446" src="https://github.com/user-attachments/assets/1ac761af-b7af-4669-904d-c65b7b66e4fd" />
 
-
-
+You're done!. You are now hosting your website locally.
 
 
 ---
@@ -82,6 +81,7 @@ Diploma in Computer Science
 Universiti Teknologi Malaysia (UTM)  
 
 ---
+![herta-kurukuru](https://github.com/user-attachments/assets/3d928770-9170-4d88-b126-8586cc90e00c)
 
 
 ![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
