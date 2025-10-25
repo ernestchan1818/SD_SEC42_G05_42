@@ -81,9 +81,10 @@ Diploma in Computer Science
 Universiti Teknologi Malaysia (UTM)  
 
 ---
-![herta-kurukuru](https://github.com/user-attachments/assets/3d928770-9170-4d88-b126-8586cc90e00c)
+![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
+![herta-kurukuru](https://github.com/user-attachments/assets/3d928770-9170-4d88-b126-8586cc90e00c) 
 
 ---
-![W Arknights](https://media1.tenor.com/m/E4ReoaN2CLYAAAAd/w-arknights-arknights.gif)
+
 
 
