@@ -1,0 +1,136 @@
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #222;
+  padding: 15px 30px;
+}
+
+header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+header nav a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+  transition: color .3s ease;
+}
+header nav a:hover { color: #f39c12; }
+
+/* Verify Card */
+.verify-wrapper {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 0 12px rgba(0,0,0,.4);
+  text-align: center;
+}
+
+.card h1 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  color: #f39c12;
+}
+.card .sub {
+  color: #cfcfcf;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+/* Form */
+.verify-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.verify-form label {
+  text-align: left;
+  font-size: .95rem;
+  color: #ddd;
+}
+
+.code-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.code-grid input {
+  height: 54px;
+  text-align: center;
+  font-size: 1.25rem;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.code-grid input:focus {
+  border-color: #f39c12;
+  box-shadow: 0 0 0 3px rgba(243,156,18,.2);
+}
+
+/* Buttons & links */
+.btn {
+  margin-top: 6px;
+  padding: 12px 16px;
+  background: #f39c12;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background .25s ease;
+}
+.btn:hover { background: #e67e22; }
+
+.meta {
+  margin-top: 14px;
+  color: #cfcfcf;
+  font-size: .95rem;
+}
+.meta .link {
+  color: #f39c12;
+  text-decoration: none;
+}
+.meta .link:hover { text-decoration: underline; }
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #222;
+  font-size: .9em;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .card { padding: 22px; }
+  .code-grid { gap: 8px; }
+  .code-grid input { height: 48px; font-size: 1.1rem; }
+}
