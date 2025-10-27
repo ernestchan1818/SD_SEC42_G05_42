@@ -39,11 +39,27 @@ You can access the database through **Admin** button on XAMPP Control Panel.
 Click on the **New** button on PhpMyAdmin Page to create database
 <img width="1919" height="884" alt="image" src="https://github.com/user-attachments/assets/fb938505-e274-43bc-ad43-abbe37b8777e" />
 
+Click on **User Accounts** button to create User
+<img width="1919" height="865" alt="Screenshot 2025-10-27 134949" src="https://github.com/user-attachments/assets/aad3dd46-22ab-4940-83ae-7ee8d2d156cc" />
+
+Click on **Add user account** button
+<img width="1919" height="860" alt="Screenshot 2025-10-27 135134" src="https://github.com/user-attachments/assets/9f64263e-7789-4a33-840b-74491ebae5ec" />
+
+Enter Username as **u827939212_DJS** and Password as **Djsgame123** and click on **Global privilages**
+<img width="1919" height="879" alt="Screenshot 2025-10-27 135647" src="https://github.com/user-attachments/assets/c9113139-d44f-47a4-a9c6-8ae817d817c2" />
+
+Scroll down and click on the **Go** button
+<img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/24752b95-e9c4-4bd4-95c0-62c45c532a3f" />
+
+Click on **database** button to go to database page
+<img width="1918" height="861" alt="Screenshot 2025-10-27 145121" src="https://github.com/user-attachments/assets/bd2d7559-080d-4419-bfa4-5a4aefbc9c8d" />
+
+
 Name the database **u827939212_otpdb** and click **Create** button
 <img width="1919" height="860" alt="image" src="https://github.com/user-attachments/assets/bd2a910b-f7d8-4103-b6bc-0d0005e74d6d" />
 
 Click on **Import** button, then Click **Choose File** button and select the database then scroll down and click the **Import** button import the database
-<img width="1486" height="609" alt="image" src="https://github.com/user-attachments/assets/8f31d465-8311-4020-8bfa-0f8a00befe45" />
+<img width="1898" height="997" alt="Screenshot 2025-10-27 150039" src="https://github.com/user-attachments/assets/6e369bd9-d7f8-4339-92ef-911024d50de2" />
 <img width="1902" height="874" alt="Screenshot 2025-10-24 184446" src="https://github.com/user-attachments/assets/1ac761af-b7af-4669-904d-c65b7b66e4fd" />
 
 You're done!. You are now hosting your website locally.
