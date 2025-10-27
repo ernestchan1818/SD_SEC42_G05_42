@@ -7,8 +7,6 @@ require 'src/Exception.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// 路径改成你安装 Composer 后的路径
-
 $mail = new PHPMailer(true);
 
 
@@ -101,15 +99,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       margin: 0;
       padding: 0;
     }</style>
-    <link rel="stylesheet" href="forgotpassword.css">
+    <link rel="stylesheet" href="forgetpassword.css">
 </head>
 <body>
     <header>
         <div class="logo">DJS Game</div>
-        <nav>
-            <a href="about.html">About Us</a>
-            <a href="contact.php">Contact</a>
-        </nav>
 
     </header>
 

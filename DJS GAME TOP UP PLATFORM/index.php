@@ -313,9 +313,9 @@ footer {
                     <a href="my_order.php">Track</a>
                     <a href="logout.php" style="color: #ff6600;">Logout</a>
                 <?php else: ?>
-                    <a href="signin.php">Sign In</a>
-                    <a href="register.php">Register</a>
-                    <a href="../DJS GAME TOP UP PLATFORMhtml/Admin & Staff/signinS.php">For Staff and Admin </a>
+                    <a href="../DJS GAME TOP UP PLATFORM/Guest/signin.php">Sign In</a>
+                    <a href="../DJS GAME TOP UP PLATFORM/Guest/register.php">Register</a>
+                    <a href="../DJS GAME TOP UP PLATFORM/Admin & Staff/signinS.php">For Staff and Admin </a>
                 <?php endif; ?>
             </nav>
         </div>
