@@ -12,6 +12,8 @@ Prepared by **👥** SD_SEC42_G05
 ## 📘 Project Overview  
 The **DJS Game Top-Up Platform** is a web-based system that allows users to purchase in-game currencies for various games. It supports multiple user roles — **Guest**, **Customer**, **Staff** and **Admin** — each with different levels of access and features.  
 
+https://github.com/ernestchan1818/SD_SEC42_G05_42
+
 ---
 
 ## ⚙️ Installation Manual  
