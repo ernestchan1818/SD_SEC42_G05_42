@@ -59,7 +59,7 @@ Name the database **u827939212_otpdb** and click **Create** button
 <img width="1919" height="860" alt="image" src="https://github.com/user-attachments/assets/bd2a910b-f7d8-4103-b6bc-0d0005e74d6d" />
 
 Click on **Import** button, then Click **Choose File** button and select the database then scroll down and click the **Import** button import the database
-<img width="1486" height="609" alt="image" src="https://github.com/user-attachments/assets/8f31d465-8311-4020-8bfa-0f8a00befe45" />
+<img width="1898" height="997" alt="Screenshot 2025-10-27 150039" src="https://github.com/user-attachments/assets/6e369bd9-d7f8-4339-92ef-911024d50de2" />
 <img width="1902" height="874" alt="Screenshot 2025-10-24 184446" src="https://github.com/user-attachments/assets/1ac761af-b7af-4669-904d-c65b7b66e4fd" />
 
 You're done!. You are now hosting your website locally.
