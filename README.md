@@ -32,12 +32,9 @@ First, you need to clone this github repositories to **htdocs** folder inside xa
 Then, run XAMPP Control Panel and start **Apache** and **MySQL**
 <img width="828" height="541" alt="Screenshot 2025-10-24 182647" src="https://github.com/user-attachments/assets/162c95af-5880-40e1-9ddf-59f575b129c2" />
 
-## Import Database
+## Create User
 You can access the database through **Admin** button on XAMPP Control Panel.
 <img width="1913" height="872" alt="image" src="https://github.com/user-attachments/assets/54ea232a-617a-4468-a900-67c4a45401c5" />
-
-Click on the **New** button on PhpMyAdmin Page to create database
-<img width="1919" height="884" alt="image" src="https://github.com/user-attachments/assets/fb938505-e274-43bc-ad43-abbe37b8777e" />
 
 Click on **User Accounts** button to create User
 <img width="1919" height="865" alt="Screenshot 2025-10-27 134949" src="https://github.com/user-attachments/assets/aad3dd46-22ab-4940-83ae-7ee8d2d156cc" />
@@ -51,9 +48,9 @@ Enter Username as **u827939212_DJS** and Password as **Djsgame123** and click on
 Scroll down and click on the **Go** button
 <img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/24752b95-e9c4-4bd4-95c0-62c45c532a3f" />
 
+## Import Database
 Click on **database** button to go to database page
 <img width="1918" height="861" alt="Screenshot 2025-10-27 145121" src="https://github.com/user-attachments/assets/bd2d7559-080d-4419-bfa4-5a4aefbc9c8d" />
-
 
 Name the database **u827939212_otpdb** and click **Create** button
 <img width="1919" height="860" alt="image" src="https://github.com/user-attachments/assets/bd2a910b-f7d8-4103-b6bc-0d0005e74d6d" />
