@@ -23,11 +23,11 @@ To run this program, you need to install these things:
 
 > XAMPP
 
-##Install XAMPP
+## Install XAMPP
 Download the Windows Installer from <a href="https://www.apachefriends.org/download.html"> XAMPP Official Website. </a>
 <img width="1246" height="713" alt="Screenshot 2025-10-24 182351" src="https://github.com/user-attachments/assets/b82fd9ff-1dae-49b8-85e0-5a8b0722fbf9" />
 
-##Run Locally
+## Run Locally
 First, you need to clone this github repositories to **htdocs** folder inside xampp.
 <img width="1661" height="978" alt="Screenshot 2025-10-24 182511" src="https://github.com/user-attachments/assets/5567c11c-c9e9-4cad-8b07-7449177597e4" />
 
