@@ -301,12 +301,12 @@ footer {
 
             <nav>
 
-                <a href="../public_html/Guest/index.php">Home</a>
-                <a href="../public_html/Guest/about.html">About</a>
-                <a href="../public_html/Guest/contact.php">Contact</a>
-                <a href="../public_html/Guest/Feedback.php">Feedback</a>
-                <a href="../public_html/Guest/view_games.php">Top-Up Games</a>
-                <a href="../public_html/Guest/view_packages.php">Top-Up Packages</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/index.php">Home</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/about.html">About</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/contact.php">Contact</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/Feedback.php">Feedback</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/view_games.php">Top-Up Games</a>
+                <a href="../DJS GAME TOP UP PLATFORM/Guest/view_packages.php">Top-Up Packages</a>
 
 
                 <?php if ($is_logged_in): ?>
@@ -315,18 +315,18 @@ footer {
                 <?php else: ?>
                     <a href="signin.php">Sign In</a>
                     <a href="register.php">Register</a>
-                    <a href="../public_html/Admin & Staff/signinS.php">For Staff and Admin </a>
+                    <a href="../DJS GAME TOP UP PLATFORMhtml/Admin & Staff/signinS.php">For Staff and Admin </a>
                 <?php endif; ?>
             </nav>
         </div>
     </header>
 
     <section id="home" class="hero">
-        <img src="../public_html/image/backgroundhome.png" alt="Game Background" class="bg-image">
+        <img src="../DJS GAME TOP UP PLATFORM/image/backgroundhome.png" alt="Game Background" class="bg-image">
         <div class="hero-text">
             <!-- 修正后的 Hero H1 和 Image 结构 -->
             <div>
-                <h1>Welcome to DJS Game</h1><img src="../public_html/image/logo.png" alt="DJS Logo Element" class="hero-image-logo">
+                <h1>Welcome to DJS Game</h1><img src="../DJS GAME TOP UP PLATFORM/image/logo.png" alt="DJS Logo Element" class="hero-image-logo">
             </div>
             <p>Your ultimate gaming experience awaits!</p>
         </div>
@@ -337,15 +337,15 @@ footer {
         <div class="game-list">
             <!-- Game Card Mockups (These should be dynamically loaded in a real app) -->
             <div class="game-card">
-                <img src="../public_html/image/genshin.webp" alt="Genshin Impact">
+                <img src="../DJS GAME TOP UP PLATFORM/image/genshin.webp" alt="Genshin Impact">
                 <h3>Genshin Impact</h3>
             </div>
             <div class="game-card">
-                <img src="../public_html/image/hsr.png" alt="Honkai Star Rail">
+                <img src="../DJS GAME TOP UP PLATFORM/image/hsr.png" alt="Honkai Star Rail">
                 <h3>Honkai: Star Rail</h3>
             </div>
             <div class="game-card">
-                <img src="../public_html/image/wuwa.png" alt="Wuthering Waves">
+                <img src="../DJS GAME TOP UP PLATFORM/image/wuwa.png" alt="Wuthering Waves">
                 <h3>Wuthering Waves</h3>
             </div>
         </div>
@@ -356,9 +356,9 @@ footer {
             <h2>We Accept</h2>
             <div class="payment-logos">
                 <!-- Payment Logos Mockups -->
-                <img src="../public_html/image/mastercard.webp" alt="Mastercard">
-                <img src="../public_html/image/visa.png" alt="Visa">
-                <img src="../public_html/image/tng.jpg" alt="TnG">
+                <img src="../DJS GAME TOP UP PLATFORM/image/mastercard.webp" alt="Mastercard">
+                <img src="../DJS GAME TOP UP PLATFORM/image/visa.png" alt="Visa">
+                <img src="../DJS GAME TOP UP PLATFORM/image/tng.jpg" alt="TnG">
             </div>
         </div>
     </section>
